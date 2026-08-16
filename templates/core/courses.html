@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Courses · ClassOrbit{% endblock %}
+{% block heading %}Courses{% endblock %}
+{% block content %}
+{% if can_manage %}{% include "core/form_panel.html" with form_title="Create a course" %}{% endif %}
+<section class="card table-card"><div class="card-heading"><div><p class="eyebrow">ACADEMICS</p><h2>{{ records|length }} courses</h2></div></div>
+<div class="table-wrap"><table><thead><tr><th>Code</th><th>Course</th><th>Grade</th><th>Teacher</th><th>Status</th></tr></thead><tbody>
+{% for item in records %}<tr><td><code>{{ item.code }}</code></td><td><strong>{{ item.name }}</strong><small>{{ item.description|truncatechars:60 }}</small></td><td>{{ item.grade_level }}</td><td>{{ item.teacher.full_name|default:"Unassigned" }}</td><td><span class="status {% if item.is_active %}paid{% else %}overdue{% endif %}">{% if item.is_active %}Active{% else %}Inactive{% endif %}</span></td></tr>
+{% empty %}<tr><td colspan="5" class="empty-state">No courses created yet.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

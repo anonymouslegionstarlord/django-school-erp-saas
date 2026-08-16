@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Sign in · ClassOrbit{% endblock %}
+{% block public_content %}
+<main class="auth-layout">
+  <section class="auth-card">
+    <p class="eyebrow">WELCOME BACK</p>
+    <h1>Sign in to ClassOrbit</h1>
+    <p class="muted">Access your school operations dashboard.</p>
+    {% if form.errors %}<div class="form-error">Your username or password was incorrect.</div>{% endif %}
+    <form method="post" class="stack-form">
+      {% csrf_token %}
+      <label>Username{{ form.username }}</label>
+      <label>Password{{ form.password }}</label>
+      {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+      <button class="button button-full" type="submit">Sign in</button>
+    </form>
+    <p class="auth-footer">New here? <a href="{% url 'signup' %}">Create a school workspace</a></p>
+  </section>
+</main>
+{% endblock %}

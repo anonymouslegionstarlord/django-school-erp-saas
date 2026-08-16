@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Teachers · ClassOrbit{% endblock %}
+{% block heading %}Teachers{% endblock %}
+{% block content %}
+{% if can_manage %}{% include "core/form_panel.html" with form_title="Add a new teacher" %}{% endif %}
+<section class="card table-card"><div class="card-heading"><div><p class="eyebrow">FACULTY</p><h2>{{ records|length }} teachers</h2></div></div>
+<div class="table-wrap"><table><thead><tr><th>Employee ID</th><th>Teacher</th><th>Subject</th><th>Joined</th><th>Status</th></tr></thead><tbody>
+{% for item in records %}<tr><td><code>{{ item.employee_id }}</code></td><td><strong>{{ item.full_name }}</strong><small>{{ item.email }}</small></td><td>{{ item.subject }}</td><td>{{ item.joined_on }}</td><td><span class="status {% if item.is_active %}paid{% else %}overdue{% endif %}">{% if item.is_active %}Active{% else %}Inactive{% endif %}</span></td></tr>
+{% empty %}<tr><td colspan="5" class="empty-state">No teachers added yet.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Multi-tenant School ERP SaaS built with Django">
+  <title>{% block title %}ClassOrbit{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+</head>
+<body>
+  {% if user.is_authenticated and current_school %}
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="{% url 'dashboard' %}">
+          <span class="brand-mark">C</span>
+          <span>ClassOrbit</span>
+        </a>
+        <div class="school-chip">
+          <small>ACTIVE SCHOOL</small>
+          <strong>{{ current_school.name }}</strong>
+          <span>{{ current_membership.get_role_display }} · {{ current_school.get_plan_display }}</span>
+        </div>
+        <nav class="nav-list" aria-label="Main navigation">
+          <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Overview</a>
+          <a href="{% url 'students' %}" class="{% if request.resolver_match.url_name == 'students' %}active{% endif %}">Students</a>
+          <a href="{% url 'teachers' %}" class="{% if request.resolver_match.url_name == 'teachers' %}active{% endif %}">Teachers</a>
+          <a href="{% url 'courses' %}" class="{% if request.resolver_match.url_name == 'courses' %}active{% endif %}">Courses</a>
+          <a href="{% url 'attendance' %}" class="{% if request.resolver_match.url_name == 'attendance' %}active{% endif %}">Attendance</a>
+          <a href="{% url 'invoices' %}" class="{% if request.resolver_match.url_name == 'invoices' or request.resolver_match.url_name == 'record_payment' %}active{% endif %}">Fees</a>
+          <a href="/api/">REST API</a>
+          {% if user.is_staff %}<a href="/admin/">Django Admin</a>{% endif %}
+        </nav>
+        <form action="{% url 'logout' %}" method="post" class="logout-form">
+          {% csrf_token %}
+          <button class="nav-button" type="submit">Sign out</button>
+        </form>
+      </aside>
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">SCHOOL OPERATIONS</p>
+            <h1>{% block heading %}Dashboard{% endblock %}</h1>
+          </div>
+          <div class="user-pill">{{ user.get_full_name|default:user.username }}</div>
+        </header>
+        {% include "core/messages.html" %}
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  {% else %}
+    <header class="public-nav">
+      <a class="brand dark" href="{% url 'landing' %}"><span class="brand-mark">C</span><span>ClassOrbit</span></a>
+      <nav>
+        <a href="{% url 'login' %}">Sign in</a>
+        <a class="button button-small" href="{% url 'signup' %}">Start free</a>
+      </nav>
+    </header>
+    {% include "core/messages.html" %}
+    {% block public_content %}{% endblock %}
+  {% endif %}
+</body>
+</html>

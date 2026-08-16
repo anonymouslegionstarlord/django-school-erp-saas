@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Attendance · ClassOrbit{% endblock %}
+{% block heading %}Attendance{% endblock %}
+{% block content %}
+{% if can_manage %}{% include "core/form_panel.html" with form_title="Mark daily attendance" %}{% endif %}
+<section class="card table-card"><div class="card-heading"><div><p class="eyebrow">LATEST RECORDS</p><h2>Attendance register</h2></div></div>
+<div class="table-wrap"><table><thead><tr><th>Date</th><th>Student</th><th>Course</th><th>Status</th><th>Notes</th></tr></thead><tbody>
+{% for item in records %}<tr><td>{{ item.date }}</td><td><strong>{{ item.student.full_name }}</strong><small>{{ item.student.admission_number }}</small></td><td>{{ item.course|default:"Whole day" }}</td><td><span class="status {{ item.status }}">{{ item.get_status_display }}</span></td><td>{{ item.notes|default:"—" }}</td></tr>
+{% empty %}<tr><td colspan="5" class="empty-state">No attendance has been marked.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

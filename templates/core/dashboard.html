@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Overview · ClassOrbit{% endblock %}
+{% block heading %}Good day, {{ user.first_name|default:user.username }}{% endblock %}
+{% block content %}
+<section class="metrics-grid">
+  <article class="metric-card"><span class="metric-icon violet">ST</span><div><small>ACTIVE STUDENTS</small><strong>{{ student_count }}</strong><p>Enrolled learners</p></div></article>
+  <article class="metric-card"><span class="metric-icon coral">TC</span><div><small>TEACHERS</small><strong>{{ teacher_count }}</strong><p>Active faculty</p></div></article>
+  <article class="metric-card"><span class="metric-icon mint">AT</span><div><small>PRESENT TODAY</small><strong>{{ present_today }}/{{ attendance_total }}</strong><p>Marked attendance</p></div></article>
+  <article class="metric-card"><span class="metric-icon gold">₹</span><div><small>OUTSTANDING</small><strong>₹{{ outstanding|floatformat:0 }}</strong><p>Against ₹{{ billed|floatformat:0 }} billed</p></div></article>
+</section>
+<section class="dashboard-grid">
+  <article class="card action-card">
+    <div class="card-heading"><div><p class="eyebrow">QUICK ACTIONS</p><h2>Keep work moving</h2></div></div>
+    <div class="action-grid">
+      <a href="{% url 'students' %}"><strong>Add a student</strong><span>Admissions and guardians →</span></a>
+      <a href="{% url 'attendance' %}"><strong>Mark attendance</strong><span>Daily student status →</span></a>
+      <a href="{% url 'invoices' %}"><strong>Create invoice</strong><span>Fees and collections →</span></a>
+      <a href="{% url 'courses' %}"><strong>Manage courses</strong><span>{{ course_count }} active courses →</span></a>
+    </div>
+  </article>
+  <article class="card">
+    <div class="card-heading"><div><p class="eyebrow">FINANCE</p><h2>Recent invoices</h2></div><a href="{% url 'invoices' %}">View all</a></div>
+    <div class="simple-list">
+      {% for invoice in recent_invoices %}
+        <div><span><strong>{{ invoice.student.full_name }}</strong><small>{{ invoice.title }}</small></span><span class="align-right"><strong>₹{{ invoice.amount }}</strong><small class="status {{ invoice.status }}">{{ invoice.get_status_display }}</small></span></div>
+      {% empty %}<div class="empty-state">No invoices yet. Create the first one from Fees.</div>{% endfor %}
+    </div>
+  </article>
+</section>
+{% endblock %}

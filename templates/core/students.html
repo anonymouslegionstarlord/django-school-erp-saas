@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Students · ClassOrbit{% endblock %}
+{% block heading %}Students{% endblock %}
+{% block content %}
+<section class="page-tools">
+  <form method="get" class="search-form"><input type="search" name="q" value="{{ query }}" placeholder="Search name, admission, or class"><button type="submit">Search</button></form>
+  {% if can_manage %}{% include "core/form_panel.html" with form_title="Add a new student" %}{% endif %}
+</section>
+<section class="card table-card">
+  <div class="card-heading"><div><p class="eyebrow">DIRECTORY</p><h2>{{ records|length }} students</h2></div></div>
+  <div class="table-wrap"><table><thead><tr><th>Admission</th><th>Student</th><th>Class</th><th>Guardian</th><th>Status</th></tr></thead><tbody>
+    {% for item in records %}<tr><td><code>{{ item.admission_number }}</code></td><td><strong>{{ item.full_name }}</strong><small>{{ item.email|default:"No email" }}</small></td><td>{{ item.class_name }}{% if item.section %} · {{ item.section }}{% endif %}</td><td>{{ item.guardian_name }}<small>{{ item.guardian_phone }}</small></td><td><span class="status {% if item.is_active %}paid{% else %}overdue{% endif %}">{% if item.is_active %}Active{% else %}Inactive{% endif %}</span></td></tr>
+    {% empty %}<tr><td colspan="5" class="empty-state">No students found.</td></tr>{% endfor %}
+  </tbody></table></div>
+</section>
+{% endblock %}

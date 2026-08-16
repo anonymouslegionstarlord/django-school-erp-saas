@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Fees · ClassOrbit{% endblock %}
+{% block heading %}Fees & invoices{% endblock %}
+{% block content %}
+{% if can_manage %}{% include "core/form_panel.html" with form_title="Create a fee invoice" %}{% endif %}
+<section class="card table-card"><div class="card-heading"><div><p class="eyebrow">COLLECTIONS</p><h2>{{ records|length }} invoices</h2></div></div>
+<div class="table-wrap"><table><thead><tr><th>Student</th><th>Invoice</th><th>Due</th><th>Amount</th><th>Balance</th><th>Status</th><th></th></tr></thead><tbody>
+{% for item in records %}<tr><td><strong>{{ item.student.full_name }}</strong><small>{{ item.student.admission_number }}</small></td><td>{{ item.title }}</td><td>{{ item.due_date }}</td><td>₹{{ item.amount }}</td><td><strong>₹{{ item.balance }}</strong></td><td><span class="status {{ item.status }}">{{ item.get_status_display }}</span></td><td>{% if can_manage and item.balance > 0 %}<a class="table-action" href="{% url 'record_payment' item.id %}">Record payment</a>{% endif %}</td></tr>
+{% empty %}<tr><td colspan="7" class="empty-state">No invoices created yet.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

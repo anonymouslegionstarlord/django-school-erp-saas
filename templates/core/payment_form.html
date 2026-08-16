@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Record payment · ClassOrbit{% endblock %}
+{% block heading %}Record payment{% endblock %}
+{% block content %}
+<section class="card focused-card">
+  <p class="eyebrow">{{ invoice.student.full_name }}</p>
+  <h2>{{ invoice.title }}</h2>
+  <p class="muted">Outstanding balance: <strong>₹{{ invoice.balance }}</strong></p>
+  <form method="post" class="stack-form">{% csrf_token %}{{ form.as_p }}<div class="button-row"><button class="button" type="submit">Save payment</button><a class="text-link" href="{% url 'invoices' %}">Cancel</a></div></form>
+</section>
+{% endblock %}
