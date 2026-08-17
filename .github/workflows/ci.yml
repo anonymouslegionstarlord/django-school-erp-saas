@@ -25,3 +25,26 @@ jobs:
         run: python manage.py check
       - name: Run tests
         run: coverage run manage.py test && coverage report --fail-under=80
+
+  clientflow-crm:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: daily-saas-products/2026-08-17-clientflow-crm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: daily-saas-products/2026-08-17-clientflow-crm/requirements-dev.txt
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Lint
+        run: ruff check .
+      - name: Check migrations
+        run: python manage.py makemigrations --check --dry-run
+      - name: Run Django checks
+        run: python manage.py check
+      - name: Test with coverage
+        run: coverage run manage.py test && coverage report

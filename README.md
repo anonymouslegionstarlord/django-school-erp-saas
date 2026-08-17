@@ -2,6 +2,14 @@
 
 A portfolio-ready, multi-tenant School ERP built with Python and Django. Each school gets an isolated workspace for students, teachers, courses, attendance, fee invoices, and payments, plus a tenant-scoped REST API.
 
+## Daily SaaS portfolio
+
+The School ERP remains the repository's root application. Independent full-stack products are stored under `daily-saas-products/`:
+
+| Date | Product | Domain | Setup |
+|---|---|---|---|
+| 2026-08-17 | ClientFlow | Multi-tenant sales CRM | [`daily-saas-products/2026-08-17-clientflow-crm/README.md`](daily-saas-products/2026-08-17-clientflow-crm/README.md) |
+
 ![Django](https://img.shields.io/badge/Django-5.2_LTS-0c4b33?logo=django)
 ![Python](https://img.shields.io/badge/Python-3.12-3776ab?logo=python&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-ready-4169e1?logo=postgresql&logoColor=white)
