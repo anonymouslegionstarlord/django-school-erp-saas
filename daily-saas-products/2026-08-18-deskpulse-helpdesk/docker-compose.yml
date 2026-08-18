@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: deskpulse
+      POSTGRES_USER: deskpulse
+      POSTGRES_PASSWORD: local-development-only
+    volumes: ["postgres_data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U deskpulse"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  web:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      DATABASE_URL: postgresql://deskpulse:local-development-only@db:5432/deskpulse
+      DJANGO_SECRET_KEY: docker-local-only-change-me
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+    depends_on:
+      db: {condition: service_healthy}
+volumes:
+  postgres_data:

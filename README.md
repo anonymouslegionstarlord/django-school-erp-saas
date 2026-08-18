@@ -9,6 +9,7 @@ The School ERP remains the repository's root application. Independent full-stack
 | Date | Product | Domain | Setup |
 |---|---|---|---|
 | 2026-08-17 | ClientFlow | Multi-tenant sales CRM | [`daily-saas-products/2026-08-17-clientflow-crm/README.md`](daily-saas-products/2026-08-17-clientflow-crm/README.md) |
+| 2026-08-18 | DeskPulse | Multi-tenant customer support help desk | [`daily-saas-products/2026-08-18-deskpulse-helpdesk/README.md`](daily-saas-products/2026-08-18-deskpulse-helpdesk/README.md) |
 
 ![Django](https://img.shields.io/badge/Django-5.2_LTS-0c4b33?logo=django)
 ![Python](https://img.shields.io/badge/Python-3.12-3776ab?logo=python&logoColor=white)
