@@ -1,0 +1,12 @@
+[tool.ruff]
+target-version = "py312"
+line-length = 140
+exclude = ["billing/migrations"]
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+[tool.coverage.run]
+source = ["billing"]
+omit = ["billing/migrations/*", "billing/management/*"]
+[tool.coverage.report]
+show_missing = true
+fail_under = 80
