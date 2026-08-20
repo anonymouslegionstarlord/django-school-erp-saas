@@ -1,0 +1,12 @@
+[tool.ruff]
+target-version="py312"
+line-length=140
+exclude=["work/migrations"]
+[tool.ruff.lint]
+select=["E","F","I"]
+[tool.coverage.run]
+source=["work"]
+omit=["work/migrations/*","work/management/*"]
+[tool.coverage.report]
+show_missing=true
+fail_under=80
