@@ -1,0 +1,27 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="ShelfWise inventory and procurement workspace">
+  <title>{% block title %}ShelfWise{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'inventory/styles.css' %}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{% url 'landing' %}"><span>SW</span>ShelfWise</a>
+    {% if user.is_authenticated %}
+      <nav aria-label="Primary">
+        <a href="{% url 'dashboard' %}">Overview</a><a href="{% url 'products' %}">Products</a>
+        <a href="{% url 'movements' %}">Movements</a><a href="{% url 'purchase_orders' %}">Purchase orders</a>
+        <a href="{% url 'suppliers' %}">Suppliers</a>
+      </nav>
+      <div class="account"><span>{{ workspace_membership.organization.name }}</span><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="link-button">Sign out</button></form></div>
+    {% else %}
+      <nav><a href="{% url 'login' %}">Sign in</a><a class="button small" href="{% url 'signup' %}">Create workspace</a></nav>
+    {% endif %}
+  </header>
+  {% if messages %}<div class="messages">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+  <main>{% block content %}{% endblock %}</main>
+  <footer><span>ShelfWise · Stock clarity for growing teams</span><a href="{% url 'api_summary' %}">API</a></footer>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}{% block title %}ShelfWise · Inventory without guesswork{% endblock %}
+{% block content %}
+<section class="hero">
+  <div><p class="eyebrow">Inventory control for practical teams</p><h1>Know what is in stock.<br><em>Order before it runs out.</em></h1>
+  <p class="lede">ShelfWise connects your catalog, suppliers, stock ledger, and purchase orders in one calm workspace built for small operations.</p>
+  <div class="actions"><a class="button" href="{% url 'signup' %}">Start your workspace</a><a class="button ghost" href="{% url 'login' %}">Explore the demo</a></div>
+  <div class="trust"><span>✓ Tenant-isolated</span><span>✓ Purchase-order receiving</span><span>✓ No card required</span></div></div>
+  <div class="hero-card"><div class="card-top"><span>Warehouse health</span><strong>Live</strong></div><div class="mini-grid"><div><small>Stock value</small><b>₹42,680</b></div><div><small>Units</small><b>286</b></div></div><div class="alert-row"><span class="dot coral"></span><div><b>2 products need attention</b><small>Reorder points reached</small></div><span>Review →</span></div><div class="alert-row"><span class="dot green"></span><div><b>PO-2026-001 arriving</b><small>Expected in 5 days</small></div><span>Track →</span></div></div>
+</section>
+<section class="feature-band"><div><span>01</span><h3>Reliable stock ledger</h3><p>Every receipt, issue, and adjustment remains traceable.</p></div><div><span>02</span><h3>Procurement workflow</h3><p>Draft, order, receive, and automatically update inventory.</p></div><div><span>03</span><h3>Tenant-safe by design</h3><p>Workspace identity is derived from the authenticated user.</p></div></section>
+{% endblock %}
