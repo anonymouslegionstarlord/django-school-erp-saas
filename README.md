@@ -14,6 +14,7 @@ The School ERP remains the repository's root application. Independent full-stack
 | 2026-08-20 | SprintBoard | Multi-tenant project and Kanban management | [`daily-saas-products/2026-08-20-sprintboard-projects/README.md`](daily-saas-products/2026-08-20-sprintboard-projects/README.md) |
 | 2026-08-21 | SlotNest | Multi-tenant appointment scheduling | [`daily-saas-products/2026-08-21-slotnest-scheduling/README.md`](daily-saas-products/2026-08-21-slotnest-scheduling/README.md) |
 | 2026-08-22 | ShelfWise | Multi-tenant inventory and procurement | [`daily-saas-products/2026-08-22-shelfwise-inventory/README.md`](daily-saas-products/2026-08-22-shelfwise-inventory/README.md) |
+| 2026-08-23 | LeaveLoom | Multi-tenant leave and PTO management | [`daily-saas-products/2026-08-23-leaveloom-pto/README.md`](daily-saas-products/2026-08-23-leaveloom-pto/README.md) |
 
 ![Django](https://img.shields.io/badge/Django-5.2_LTS-0c4b33?logo=django)
 ![Python](https://img.shields.io/badge/Python-3.12-3776ab?logo=python&logoColor=white)
