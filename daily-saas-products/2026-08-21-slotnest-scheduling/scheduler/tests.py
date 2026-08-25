@@ -52,7 +52,11 @@ class SlotNestTests(TestCase):
         self.assertNotContains(response, "Bea")
 
     def test_schedule_only_contains_current_tenant(self):
-        response = self.client.get(reverse("schedule"), {"date": self.starts.date()})
+        # The schedule view groups appointments in the project's local timezone.
+        # Using the UTC date here becomes flaky when the appointment crosses a
+        # local-midnight boundary (for example, 23:00 UTC is the next day in IST).
+        local_start_date = timezone.localtime(self.starts).date()
+        response = self.client.get(reverse("schedule"), {"date": local_start_date})
         self.assertContains(response, "Consultation")
         self.assertNotContains(response, "Foreign service")
 
