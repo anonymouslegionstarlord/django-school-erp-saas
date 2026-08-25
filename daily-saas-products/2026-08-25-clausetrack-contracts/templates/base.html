@@ -1,0 +1,7 @@
+{% load static %}<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{% block title %}ClauseTrack{% endblock %}</title><link rel="stylesheet" href="{% static 'contracts/app.css' %}"></head>
+<body>
+<header class="nav"><a class="brand" href="{% url 'landing' %}"><span>CT</span>ClauseTrack</a>{% if user.is_authenticated %}<nav><a href="{% url 'dashboard' %}">Overview</a><a href="{% url 'contract_list' %}">Contracts</a><a href="{% url 'obligation_list' %}">Obligations</a><a href="{% url 'counterparties' %}">Counterparties</a></nav><div class="user"><div><b>{{ user.username }}</b><small>{{ current_membership.get_role_display }}</small></div><form action="{% url 'logout' %}" method="post">{% csrf_token %}<button class="link">Sign out</button></form></div>{% else %}<nav><a href="{% url 'login' %}">Sign in</a><a class="button small" href="{% url 'signup' %}">Start free</a></nav>{% endif %}</header>
+<main>{% for message in messages %}<div class="flash {{ message.tags }}">{{ message }}</div>{% endfor %}{% block content %}{% endblock %}</main>
+<footer>ClauseTrack · Contract operations without spreadsheet chaos.</footer>
+</body></html>

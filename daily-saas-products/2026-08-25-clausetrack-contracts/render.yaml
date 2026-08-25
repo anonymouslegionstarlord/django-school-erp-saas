@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: clausetrack
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    startCommand: gunicorn config.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase: {name: clausetrack-db, property: connectionString}
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: clausetrack.onrender.com
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: https://clausetrack.onrender.com
+databases:
+  - name: clausetrack-db
+    plan: free

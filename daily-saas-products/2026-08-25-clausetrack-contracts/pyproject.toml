@@ -1,0 +1,14 @@
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+
+[tool.coverage.run]
+source = ["contracts"]
+omit = ["*/migrations/*", "*/management/*", "*/admin.py"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true

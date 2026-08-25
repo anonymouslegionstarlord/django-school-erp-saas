@@ -16,6 +16,7 @@ The School ERP remains the repository's root application. Independent full-stack
 | 2026-08-22 | ShelfWise | Multi-tenant inventory and procurement | [`daily-saas-products/2026-08-22-shelfwise-inventory/README.md`](daily-saas-products/2026-08-22-shelfwise-inventory/README.md) |
 | 2026-08-23 | LeaveLoom | Multi-tenant leave and PTO management | [`daily-saas-products/2026-08-23-leaveloom-pto/README.md`](daily-saas-products/2026-08-23-leaveloom-pto/README.md) |
 | 2026-08-24 | MaintainIQ | Multi-tenant facilities maintenance | [`daily-saas-products/2026-08-24-maintainiq-facilities/README.md`](daily-saas-products/2026-08-24-maintainiq-facilities/README.md) |
+| 2026-08-25 | ClauseTrack | Multi-tenant contract lifecycle management | [`daily-saas-products/2026-08-25-clausetrack-contracts/README.md`](daily-saas-products/2026-08-25-clausetrack-contracts/README.md) |
 
 ![Django](https://img.shields.io/badge/Django-5.2_LTS-0c4b33?logo=django)
 ![Python](https://img.shields.io/badge/Python-3.12-3776ab?logo=python&logoColor=white)
