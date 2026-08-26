@@ -201,3 +201,22 @@ jobs:
       - run: python manage.py makemigrations --check --dry-run
       - run: python manage.py check
       - run: coverage run manage.py test && coverage report
+
+  talentnest-ats:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: daily-saas-products/2026-08-26-talentnest-ats
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: daily-saas-products/2026-08-26-talentnest-ats/requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - run: ruff format --check .
+      - run: ruff check .
+      - run: python manage.py makemigrations --check --dry-run
+      - run: python manage.py check
+      - run: coverage run manage.py test && coverage report

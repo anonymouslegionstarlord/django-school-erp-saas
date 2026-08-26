@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}TalentNest · Hiring, clearly{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">Applicant tracking for focused teams</div>
+    <h1>Build your team without <em>losing the human thread.</em></h1>
+    <p>TalentNest brings jobs, candidates, interviews, feedback, and decisions into one clear workspace—from first application to signed offer.</p>
+    <div class="actions"><a class="button" href="{% url 'signup' %}">Create a workspace</a><a class="button secondary" href="{% url 'login' %}">Explore the demo</a></div>
+  </div>
+  <aside class="hero-card">
+    <div class="card-head"><div><small>Hiring pulse</small><h2>Engineering pipeline</h2></div><span class="live">LIVE</span></div>
+    <div class="pipeline-preview">
+      <div><span>Applied</span><b>18</b></div><div><span>Screening</span><b>7</b></div>
+      <div><span>Interview</span><b>4</b></div><div><span>Offer</span><b>2</b></div>
+    </div>
+    <div class="signal"><span>AM</span><div><b>Asha Mehta</b><small>Technical interview · Thursday</small></div><strong>5.0</strong></div>
+    <div class="signal"><span>RK</span><div><b>Rohan Kapoor</b><small>Offer approval requested</small></div><strong>4.8</strong></div>
+  </aside>
+</section>
+<section class="feature-grid">
+  <article><span class="feature-icon">01</span><b>One visible pipeline</b><p>See every candidate, stage, owner, and next step without spreadsheet archaeology.</p></article>
+  <article><span class="feature-icon">02</span><b>Structured interviews</b><p>Schedule panels, collect scored feedback, and preserve a decision trail.</p></article>
+  <article><span class="feature-icon">03</span><b>Workspace isolation</b><p>Every job, candidate, interview, and API response stays inside its organization.</p></article>
+</section>
+{% endblock %}

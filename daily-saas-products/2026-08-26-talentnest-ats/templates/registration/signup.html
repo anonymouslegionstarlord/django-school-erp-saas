@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Create workspace · TalentNest{% endblock %}
+{% block content %}
+<section class="auth">
+  <div class="auth-copy"><div class="eyebrow">Start in minutes</div><h1>Give every candidate a clear, consistent journey.</h1><p>Your signup creates an isolated organization workspace and an owner account.</p></div>
+  <form class="panel form" method="post">{% csrf_token %}<h2>Create your workspace</h2>{{ form.as_p }}<button class="button full">Create workspace</button><p class="center muted">Already registered? <a class="accent" href="{% url 'login' %}">Sign in</a></p></form>
+</section>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="TalentNest applicant tracking SaaS">
+  <title>{% block title %}TalentNest{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'ats/app.css' %}">
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="{% url 'landing' %}"><span>TN</span>TalentNest</a>
+    {% if user.is_authenticated %}
+      <nav>
+        <a href="{% url 'dashboard' %}">Overview</a>
+        <a href="{% url 'pipeline' %}">Pipeline</a>
+        <a href="{% url 'job_list' %}">Jobs</a>
+        <a href="{% url 'candidate_list' %}">Candidates</a>
+        <a href="{% url 'interview_list' %}">Interviews</a>
+      </nav>
+      <div class="user">
+        <div><b>{{ user.username }}</b><small>{{ current_membership.get_role_display }}</small></div>
+        <form action="{% url 'logout' %}" method="post">
+          {% csrf_token %}<button class="link">Sign out</button>
+        </form>
+      </div>
+    {% else %}
+      <nav><a href="{% url 'login' %}">Sign in</a><a class="button small" href="{% url 'signup' %}">Start free</a></nav>
+    {% endif %}
+  </header>
+  <main>
+    {% for message in messages %}<div class="flash {{ message.tags }}">{{ message }}</div>{% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer>TalentNest · A calmer, faster path from applicant to hire.</footer>
+</body>
+</html>

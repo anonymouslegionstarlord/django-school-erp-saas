@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}New application · TalentNest{% endblock %}
+{% block content %}
+<div class="narrow"><a class="back" href="{% url 'pipeline' %}">← Back to pipeline</a><div class="page-head"><div><div class="eyebrow">New pipeline entry</div><h1>Add an application</h1><p>Connect an existing candidate to an open role and assign an owner.</p></div></div><form class="panel form two-col" method="post">{% csrf_token %}{{ form.as_p }}<div class="form-actions"><a class="button secondary" href="{% url 'candidate_list' %}">Need a candidate?</a><button class="button">Add to pipeline</button></div></form></div>
+{% endblock %}

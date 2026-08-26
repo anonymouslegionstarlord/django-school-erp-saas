@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Sign in · TalentNest{% endblock %}
+{% block content %}
+<section class="auth">
+  <div class="auth-copy"><div class="eyebrow">Welcome back</div><h1>Your next great hire is already in motion.</h1><p>Use the demo owner account <code>demo_talent</code> with password <code>DemoPass123!</code>.</p></div>
+  <form class="panel form" method="post">{% csrf_token %}<h2>Sign in to TalentNest</h2>{{ form.as_p }}{% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}<button class="button full">Sign in</button><p class="center muted">New here? <a class="accent" href="{% url 'signup' %}">Create a workspace</a></p></form>
+</section>
+{% endblock %}

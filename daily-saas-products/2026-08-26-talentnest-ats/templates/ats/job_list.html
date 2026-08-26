@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}Jobs · TalentNest{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="eyebrow">Requisitions</div><h1>Job openings</h1><p>Plan headcount and track every role from draft to close.</p></div>{% if can_manage %}<a class="button" href="{% url 'job_create' %}">+ New job</a>{% endif %}</div>
+<form class="filters" method="get"><input name="q" value="{{ query }}" placeholder="Search title, code, department, or location"><select name="status"><option value="">All statuses</option>{% for value, label in statuses %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select><button class="button secondary">Filter</button></form>
+<section class="job-grid">{% for job in jobs %}<a class="job-card" href="{% url 'job_detail' job.pk %}"><div class="inline"><span class="job-code">{{ job.code }}</span><span class="pill {{ job.status }}">{{ job.get_status_display }}</span></div><h2>{{ job.title }}</h2><p>{{ job.department }} · {{ job.location }}</p><div class="job-meta"><span><b>{{ job.openings }}</b> opening{{ job.openings|pluralize }}</span><span><b>{{ job.active_application_count }}</b> active</span><span>{{ job.get_employment_type_display }}</span></div><small>Owned by {{ job.recruiter.username }}</small></a>{% empty %}<div class="empty panel span-all">No jobs match this view.</div>{% endfor %}</section>
+{% endblock %}

@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}New job · TalentNest{% endblock %}
+{% block content %}
+<div class="narrow"><a class="back" href="{% url 'job_list' %}">← Back to jobs</a><div class="page-head"><div><div class="eyebrow">New requisition</div><h1>Create a job opening</h1><p>Define the role, owner, hiring target, and candidate-facing brief.</p></div></div><form class="panel form two-col" method="post">{% csrf_token %}{{ form.as_p }}<div class="form-actions"><a class="button secondary" href="{% url 'job_list' %}">Cancel</a><button class="button">Create job</button></div></form></div>
+{% endblock %}
