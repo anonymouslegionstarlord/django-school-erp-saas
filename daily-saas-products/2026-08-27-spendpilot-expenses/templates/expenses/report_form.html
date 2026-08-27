@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{% if report %}Edit report{% else %}New report{% endif %} · SpendPilot{% endblock %}
+{% block content %}
+<div class="page-head compact-head">
+  <div><a class="back-link" href="{% if report %}{% url 'report_detail' report.pk %}{% else %}{% url 'report_list' %}{% endif %}">← Back</a><h1>{% if report %}Edit {{ report.reference }}{% else %}Create an expense report{% endif %}</h1><p>Group related expenses so approvers have the full business context.</p></div>
+</div>
+<section class="form-panel panel narrow-panel">
+  <form method="post" class="stack-form spacious">
+    {% csrf_token %}
+    {% for field in form %}
+      <label>{{ field.label }} {{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</label>
+    {% endfor %}
+    {% for error in form.non_field_errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+    <div class="form-actions"><a class="button ghost" href="{% if report %}{% url 'report_detail' report.pk %}{% else %}{% url 'report_list' %}{% endif %}">Cancel</a><button class="button" type="submit">{% if report %}Save changes{% else %}Create draft{% endif %}</button></div>
+  </form>
+</section>
+{% endblock %}

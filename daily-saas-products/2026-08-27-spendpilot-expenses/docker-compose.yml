@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: spendpilot
+      POSTGRES_USER: spendpilot
+      POSTGRES_PASSWORD: local-development-only
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U spendpilot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    command: >-
+      sh -c "python manage.py migrate &&
+      python manage.py seed_demo &&
+      gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+    environment:
+      DATABASE_URL: postgresql://spendpilot:local-development-only@db:5432/spendpilot
+      DJANGO_SECRET_KEY: docker-local-development-key
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+      DJANGO_DEBUG: "True"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

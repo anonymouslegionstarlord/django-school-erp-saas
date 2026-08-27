@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Sign in · SpendPilot{% endblock %}
+{% block public_content %}
+<section class="auth-layout public-wrap">
+  <div class="auth-intro"><span class="eyebrow">Welcome back</span><h1>Bring every claim<br>to a clean close.</h1><p>Sign in to submit spend, review exceptions, and keep reimbursements moving.</p></div>
+  <div class="auth-card">
+    <h2>Sign in</h2><p>Use your workspace credentials.</p>
+    {% if form.errors %}<div class="form-error">The username or password was not recognized.</div>{% endif %}
+    <form method="post" class="stack-form">
+      {% csrf_token %}
+      <label>Username {{ form.username }}</label>
+      <label>Password {{ form.password }}</label>
+      {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+      <button class="button full" type="submit">Sign in</button>
+    </form>
+    <div class="demo-note"><strong>Demo owner</strong><code>demo_spend</code><code>DemoPass123!</code></div>
+    <p class="auth-foot">New to SpendPilot? <a href="{% url 'signup' %}">Create a workspace</a></p>
+  </div>
+</section>
+{% endblock %}

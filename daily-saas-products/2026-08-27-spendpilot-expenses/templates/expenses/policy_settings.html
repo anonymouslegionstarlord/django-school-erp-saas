@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Policy & controls · SpendPilot{% endblock %}
+{% block content %}
+<div class="page-head"><div><span class="eyebrow">Workspace administration</span><h1>Policy & controls</h1><p>Define cost ownership, category limits and receipt thresholds.</p></div></div>
+<div class="content-grid settings-grid">
+  <section class="panel">
+    <div class="panel-head"><div><h2>Expense categories</h2><p>A zero value disables the corresponding rule.</p></div></div>
+    <div class="table-wrap"><table><thead><tr><th>Category</th><th>Daily limit</th><th>Receipt required over</th><th>Status</th></tr></thead><tbody>{% for category in categories %}<tr><td><strong>{{ category.name }}</strong></td><td>{{ organization.base_currency }} {{ category.daily_limit|floatformat:2 }}</td><td>{{ organization.base_currency }} {{ category.receipt_required_over|floatformat:2 }}</td><td>{% if category.active %}<span class="policy-ok">Active</span>{% else %}<span class="muted">Inactive</span>{% endif %}</td></tr>{% empty %}<tr><td colspan="4" class="empty-cell">No categories configured.</td></tr>{% endfor %}</tbody></table></div>
+    <details class="inline-create"><summary>＋ Add category</summary><form method="post" class="grid-form">{% csrf_token %}<input type="hidden" name="kind" value="category">{% for field in category_form %}<label>{{ field.label }} {{ field }}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</label>{% endfor %}<div class="full-row"><button class="button small" type="submit">Save category</button></div></form></details>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><div><h2>Cost centers</h2><p>Route spend to accountable teams or budgets.</p></div></div>
+    <div class="table-wrap"><table><thead><tr><th>Code</th><th>Name</th><th>Manager</th><th>Status</th></tr></thead><tbody>{% for cost_center in cost_centers %}<tr><td><span class="tag">{{ cost_center.code }}</span></td><td><strong>{{ cost_center.name }}</strong></td><td>{{ cost_center.manager.username|default:"Unassigned" }}</td><td>{% if cost_center.active %}<span class="policy-ok">Active</span>{% else %}<span class="muted">Inactive</span>{% endif %}</td></tr>{% empty %}<tr><td colspan="4" class="empty-cell">No cost centers configured.</td></tr>{% endfor %}</tbody></table></div>
+    <details class="inline-create"><summary>＋ Add cost center</summary><form method="post" class="grid-form">{% csrf_token %}<input type="hidden" name="kind" value="cost_center">{% for field in cost_center_form %}<label>{{ field.label }} {{ field }}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</label>{% endfor %}<div class="full-row"><button class="button small" type="submit">Save cost center</button></div></form></details>
+  </section>
+</div>
+<section class="panel policy-explainer">
+  <span class="metric-icon violet">i</span><div><h2>How policy evaluation works</h2><p>Each expense line is evaluated when saved. SpendPilot flags category-limit breaches, missing receipts above the configured threshold, and dates outside the report's trip window. Flags remain visible to the submitter and reviewer; they do not silently block legitimate exceptions. An approver must record a note before approving a flagged report.</p></div>
+</section>
+{% endblock %}

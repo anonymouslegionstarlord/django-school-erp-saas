@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}{{ report.reference }} · SpendPilot{% endblock %}
+{% block content %}
+<div class="page-head detail-head">
+  <div><a class="back-link" href="{% url 'report_list' %}">← Expense reports</a><div class="title-line"><h1>{{ report.title }}</h1><span class="status {{ report.status }}">{{ report.get_status_display }}</span></div><p>{{ report.reference }} · {{ report.cost_center }} · submitted by {{ report.submitter.get_full_name|default:report.submitter.username }}</p></div>
+  <div class="head-actions">
+    {% if report.submitter == user and report.is_editable %}<a class="button ghost" href="{% url 'report_edit' report.pk %}">Edit details</a>{% endif %}
+    {% if report.submitter == user and report.is_editable %}<form method="post" action="{% url 'report_submit' report.pk %}">{% csrf_token %}<button class="button" type="submit">Submit for approval</button></form>{% endif %}
+    {% if membership.can_reimburse and report.status == 'approved' %}<form method="post" action="{% url 'report_reimburse' report.pk %}">{% csrf_token %}<button class="button" type="submit">Mark reimbursed</button></form>{% endif %}
+  </div>
+</div>
+
+<section class="report-summary panel">
+  <div><small>Total claim</small><strong>{{ organization.base_currency }} {{ report.total_amount|floatformat:2 }}</strong></div>
+  <div><small>Expense items</small><strong>{{ items|length }}</strong></div>
+  <div><small>Policy flags</small><strong class="{% if report.policy_issue_count %}danger-text{% endif %}">{{ report.policy_issue_count }}</strong></div>
+  <div><small>Business purpose</small><p>{{ report.purpose }}</p></div>
+  {% if report.trip_start %}<div><small>Trip dates</small><p>{{ report.trip_start|date:"d M Y" }}{% if report.trip_end %} – {{ report.trip_end|date:"d M Y" }}{% endif %}</p></div>{% endif %}
+  {% if report.reviewed_by %}<div><small>Decision</small><p>{{ report.reviewed_by.username }} · {{ report.decided_at|date:"d M Y, H:i" }}</p></div>{% endif %}
+</section>
+
+{% if report.decision_note %}<div class="decision-note"><strong>Decision note</strong><p>{{ report.decision_note }}</p></div>{% endif %}
+
+<div class="content-grid report-layout">
+  <div class="main-column">
+    <section class="panel">
+      <div class="panel-head"><div><h2>Expense items</h2><p>Policy checks run when each line is saved</p></div><strong>{{ organization.base_currency }} {{ report.total_amount|floatformat:2 }}</strong></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Merchant</th><th>Category</th><th>Receipt</th><th>Policy</th><th class="numeric">Amount</th>{% if report.submitter == user and report.is_editable %}<th></th>{% endif %}</tr></thead>
+          <tbody>
+            {% for item in items %}
+              <tr>
+                <td>{{ item.expense_date|date:"d M Y" }}</td>
+                <td><strong>{{ item.merchant }}</strong>{% if item.description %}<small>{{ item.description }}</small>{% endif %}</td>
+                <td><span class="tag">{{ item.category.name }}</span></td>
+                <td>{% if item.receipt_url %}<a href="{{ item.receipt_url }}" target="_blank" rel="noopener">View ↗</a>{% else %}<span class="muted">None</span>{% endif %}</td>
+                <td>{% if item.policy_note %}<span class="policy-flag" title="{{ item.policy_note }}">! {{ item.policy_note }}</span>{% else %}<span class="policy-ok">✓ Clear</span>{% endif %}</td>
+                <td class="numeric"><strong>{{ organization.base_currency }} {{ item.amount|floatformat:2 }}</strong></td>
+                {% if report.submitter == user and report.is_editable %}<td><form method="post" action="{% url 'item_delete' report.pk item.pk %}">{% csrf_token %}<button class="icon-button danger" type="submit" aria-label="Delete expense">×</button></form></td>{% endif %}
+              </tr>
+            {% empty %}<tr><td colspan="7" class="empty-cell">No items yet. Add the first expense below.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    {% if report.submitter == user and report.is_editable %}
+    <section class="panel form-panel">
+      <div class="panel-head"><div><h2>Add an expense</h2><p>Use a secure receipt URL; uploaded files are intentionally out of scope for this MVP.</p></div></div>
+      <form method="post" action="{% url 'item_add' report.pk %}" class="grid-form">
+        {% csrf_token %}
+        {% for field in item_form %}<label>{{ field.label }} {{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}</label>{% endfor %}
+        <div class="form-actions full-row"><button class="button" type="submit">Add expense</button></div>
+      </form>
+    </section>
+    {% endif %}
+
+    {% if membership.can_review and report.status == 'submitted' and report.submitter != user %}
+    <section class="panel approval-panel">
+      <div><span class="eyebrow">Manager control</span><h2>Record an approval decision</h2><p>Rejections require a reason. Approvals with policy flags require an exception note.</p></div>
+      <form method="post" action="{% url 'report_decide' report.pk %}" class="stack-form">
+        {% csrf_token %}{{ decision_form.note }}
+        <div class="form-actions"><button class="button danger-button" name="action" value="reject" type="submit">Reject</button><button class="button" name="action" value="approve" type="submit">Approve report</button></div>
+      </form>
+    </section>
+    {% endif %}
+  </div>
+
+  <aside class="side-column">
+    <section class="panel audit-panel">
+      <div class="panel-head"><div><h2>Audit trail</h2><p>Append-only operational context</p></div></div>
+      <form method="post" action="{% url 'comment_add' report.pk %}" class="comment-form">{% csrf_token %}{{ comment_form.message }}<button class="icon-button" type="submit">→</button></form>
+      <ol class="timeline">
+        {% for activity in activities %}<li><span class="timeline-dot {{ activity.action }}"></span><div><strong>{{ activity.message }}</strong><small>{{ activity.actor.username }} · {{ activity.created_at|date:"d M, H:i" }}</small></div></li>{% empty %}<li><p>No activity recorded.</p></li>{% endfor %}
+      </ol>
+    </section>
+  </aside>
+</div>
+{% endblock %}

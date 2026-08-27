@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Overview · SpendPilot{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><span class="eyebrow">{{ organization.name }}</span><h1>Spend overview</h1><p>Track claims from first entry through reimbursement.</p></div>
+  <a class="button" href="{% url 'report_create' %}">＋ New expense report</a>
+</div>
+
+<section class="metric-grid">
+  <article class="metric"><span class="metric-icon violet">↗</span><div><small>Approved this month</small><strong>{{ organization.base_currency }} {{ approved_spend|floatformat:2 }}</strong><span>Based on expense dates</span></div></article>
+  <article class="metric"><span class="metric-icon amber">⌛</span><div><small>Submitted</small><strong>{{ pending_count }}</strong><span>Waiting for a decision</span></div></article>
+  <article class="metric"><span class="metric-icon cyan">◎</span><div><small>Ready to reimburse</small><strong>{{ awaiting_reimbursement }}</strong><span>Approved, not yet settled</span></div></article>
+  <article class="metric"><span class="metric-icon rose">!</span><div><small>Open policy flags</small><strong>{{ policy_issue_count }}</strong><span>On draft or submitted items</span></div></article>
+</section>
+
+<div class="content-grid two-thirds">
+  <section class="panel">
+    <div class="panel-head"><div><h2>Recent reports</h2><p>Your visible spend activity</p></div><a href="{% url 'report_list' %}">View all →</a></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Report</th><th>Owner</th><th>Status</th><th class="numeric">Total</th></tr></thead>
+        <tbody>
+          {% for report in recent_reports %}
+            <tr>
+              <td><a class="primary-link" href="{% url 'report_detail' report.pk %}">{{ report.title }}</a><small>{{ report.reference }} · {{ report.cost_center.code }}</small></td>
+              <td>{{ report.submitter.get_full_name|default:report.submitter.username }}</td>
+              <td><span class="status {{ report.status }}">{{ report.get_status_display }}</span>{% if report.policy_issue_count %}<small class="flag-text">{{ report.policy_issue_count }} flag{{ report.policy_issue_count|pluralize }}</small>{% endif %}</td>
+              <td class="numeric"><strong>{{ organization.base_currency }} {{ report.total_amount|floatformat:2 }}</strong></td>
+            </tr>
+          {% empty %}<tr><td colspan="4" class="empty-cell">No reports yet. Create the first one to start tracking spend.</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <aside class="panel spend-mix">
+    <div class="panel-head"><div><h2>Category mix</h2><p>Approved spend this month</p></div></div>
+    {% for row in category_spend %}
+      <div class="mix-row"><span><i class="dot color-{{ forloop.counter }}"></i>{{ row.category__name }}</span><strong>{{ organization.base_currency }} {{ row.total|floatformat:2 }}</strong></div>
+    {% empty %}<div class="empty-state compact"><span>◔</span><p>Approved spend will appear here.</p></div>{% endfor %}
+  </aside>
+</div>
+
+{% if membership.can_review or membership.can_reimburse %}
+<div class="content-grid">
+  {% if membership.can_review %}
+  <section class="panel queue-panel">
+    <div class="panel-head"><div><h2>Approval queue</h2><p>Submitted by other team members</p></div></div>
+    {% for report in review_queue %}
+      <a class="queue-row" href="{% url 'report_detail' report.pk %}"><span class="avatar">{{ report.submitter.username|first|upper }}</span><span><strong>{{ report.title }}</strong><small>{{ report.submitter.username }} · {{ report.policy_issue_count }} policy flag{{ report.policy_issue_count|pluralize }}</small></span><b>{{ organization.base_currency }} {{ report.total_amount|floatformat:2 }}</b><span>→</span></a>
+    {% empty %}<div class="empty-state compact"><span>✓</span><p>No reports need your approval.</p></div>{% endfor %}
+  </section>
+  {% endif %}
+  {% if membership.can_reimburse %}
+  <section class="panel queue-panel">
+    <div class="panel-head"><div><h2>Reimbursement queue</h2><p>Approved and ready to settle</p></div></div>
+    {% for report in reimbursement_queue %}
+      <a class="queue-row" href="{% url 'report_detail' report.pk %}"><span class="avatar green">{{ report.submitter.username|first|upper }}</span><span><strong>{{ report.title }}</strong><small>{{ report.reference }} · {{ report.cost_center.code }}</small></span><b>{{ organization.base_currency }} {{ report.total_amount|floatformat:2 }}</b><span>→</span></a>
+    {% empty %}<div class="empty-state compact"><span>✓</span><p>No approved claims are waiting.</p></div>{% endfor %}
+  </section>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

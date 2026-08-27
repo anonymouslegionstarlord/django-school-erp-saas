@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}SpendPilot · Expense operations without the spreadsheet{% endblock %}
+{% block public_content %}
+<section class="hero public-wrap">
+  <div class="hero-copy">
+    <span class="eyebrow">Policy-aware spend operations</span>
+    <h1>Expenses move quickly.<br><em>Controls stay intact.</em></h1>
+    <p>SpendPilot gives employees a simple claim experience and gives finance a complete approval trail—without chasing receipts across email and spreadsheets.</p>
+    <div class="hero-actions">
+      <a class="button" href="{% url 'signup' %}">Create a workspace</a>
+      <a class="button ghost" href="{% url 'login' %}">Explore the demo</a>
+    </div>
+    <div class="trust-row"><span>✓ Tenant isolated</span><span>✓ Policy checks</span><span>✓ Approval audit trail</span></div>
+  </div>
+  <div class="hero-panel" aria-label="Product preview">
+    <div class="preview-head"><span><i></i><i></i><i></i></span><small>August spend overview</small></div>
+    <div class="preview-grid">
+      <div><small>Approved spend</small><strong>₹84,720</strong><span class="positive">↓ 12% vs July</span></div>
+      <div><small>Needs review</small><strong>6</strong><span>2 policy flags</span></div>
+    </div>
+    <div class="preview-row"><span class="avatar blue">AM</span><span><strong>Client workshop · Mumbai</strong><small>Travel · SP-00124</small></span><b>₹18,640</b><mark>Submitted</mark></div>
+    <div class="preview-row"><span class="avatar gold">RK</span><span><strong>Design software renewal</strong><small>Software · SP-00123</small></span><b>₹9,999</b><mark class="approved">Approved</mark></div>
+    <div class="preview-row"><span class="avatar green">NS</span><span><strong>Quarterly team meetup</strong><small>Meals · SP-00119</small></span><b>₹12,340</b><mark class="paid">Reimbursed</mark></div>
+  </div>
+</section>
+<section class="feature-strip public-wrap">
+  <article><span>01</span><h2>Capture clean claims</h2><p>Structured reports, itemized spend, cost centers and receipt links keep every claim ready for review.</p></article>
+  <article><span>02</span><h2>Flag policy exceptions</h2><p>Category thresholds, missing receipts and out-of-trip dates surface before an approver acts.</p></article>
+  <article><span>03</span><h2>Close the finance loop</h2><p>Separate approval and reimbursement permissions preserve accountability from submission to payment.</p></article>
+</section>
+<section class="workflow public-wrap">
+  <div><span class="eyebrow">One operational record</span><h2>From swipe to settled,<br>every decision is visible.</h2></div>
+  <ol><li><b>Employee</b><span>Builds and submits an itemized expense report.</span></li><li><b>Manager</b><span>Reviews policy flags and records a reasoned decision.</span></li><li><b>Finance</b><span>Tracks approved claims and records reimbursement.</span></li></ol>
+</section>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="SpendPilot expense approvals and reimbursement operations">
+  <title>{% block title %}SpendPilot{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'expenses/app.css' %}">
+</head>
+<body class="{% if user.is_authenticated %}app-shell{% else %}public-shell{% endif %}">
+  {% if user.is_authenticated %}
+    <aside class="sidebar">
+      <a class="brand" href="{% url 'dashboard' %}" aria-label="SpendPilot dashboard">
+        <span class="brand-mark">S</span>
+        <span><strong>SpendPilot</strong><small>Expense control</small></span>
+      </a>
+      <nav class="main-nav" aria-label="Primary navigation">
+        <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"><span>◫</span> Overview</a>
+        <a href="{% url 'report_list' %}" class="{% if 'report' in request.resolver_match.url_name %}active{% endif %}"><span>▤</span> Expense reports</a>
+        {% if membership.can_configure %}
+          <a href="{% url 'policy_settings' %}" class="{% if request.resolver_match.url_name == 'policy_settings' %}active{% endif %}"><span>⚙</span> Policy & controls</a>
+        {% endif %}
+      </nav>
+      <div class="sidebar-foot">
+        <div class="workspace-chip">
+          <span class="avatar">{{ organization.name|first|upper }}</span>
+          <span><strong>{{ organization.name }}</strong><small>{{ membership.get_role_display }} · {{ organization.base_currency }}</small></span>
+        </div>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button class="text-button" type="submit">Sign out</button>
+        </form>
+      </div>
+    </aside>
+    <main class="app-main">
+      <header class="mobile-header">
+        <a class="brand" href="{% url 'dashboard' %}"><span class="brand-mark">S</span><strong>SpendPilot</strong></a>
+        <a class="button small" href="{% url 'report_create' %}">New report</a>
+      </header>
+      {% if messages %}
+        <div class="message-stack" aria-live="polite">
+          {% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}
+        </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  {% else %}
+    <header class="public-header">
+      <a class="brand" href="{% url 'landing' %}"><span class="brand-mark">S</span><span><strong>SpendPilot</strong><small>Expense control</small></span></a>
+      <nav><a href="{% url 'login' %}">Sign in</a><a class="button small" href="{% url 'signup' %}">Start free</a></nav>
+    </header>
+    {% if messages %}
+      <div class="message-stack public-messages">
+        {% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}
+      </div>
+    {% endif %}
+    <main>{% block public_content %}{% endblock %}</main>
+  {% endif %}
+</body>
+</html>

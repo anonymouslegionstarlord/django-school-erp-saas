@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Create workspace · SpendPilot{% endblock %}
+{% block public_content %}
+<section class="auth-layout public-wrap">
+  <div class="auth-intro"><span class="eyebrow">Start with safe defaults</span><h1>Your spend process,<br>ready in minutes.</h1><p>Create an isolated workspace with starter categories, a general cost center, and an owner account.</p></div>
+  <div class="auth-card wide">
+    <h2>Create your workspace</h2><p>No payment details required for this portfolio demo.</p>
+    <form method="post" class="stack-form">
+      {% csrf_token %}
+      {% for field in form %}
+        <label>{{ field.label }} {{ field }}{% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</label>
+      {% endfor %}
+      {% for error in form.non_field_errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+      <button class="button full" type="submit">Create workspace</button>
+    </form>
+    <p class="auth-foot">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+  </div>
+</section>
+{% endblock %}
