@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}New test run · QualityDock{% endblock %}
+{% block content %}
+<div class="page-head compact"><div><a class="back" href="{% url 'run_list' %}">← Test runs</a><h1>Create a test run</h1><p>Set the release target and pull reusable ready cases into execution.</p></div></div><section class="panel form-panel narrow"><form method="post" class="stack-form">{% csrf_token %}{% for field in form %}<label class="{% if field.name == 'include_ready_cases' %}checkbox-label{% endif %}">{{ field.label }} {{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</label>{% endfor %}<div class="form-actions"><a class="button ghost" href="{% url 'run_list' %}">Cancel</a><button class="button">Create test run</button></div></form></section>
+{% endblock %}

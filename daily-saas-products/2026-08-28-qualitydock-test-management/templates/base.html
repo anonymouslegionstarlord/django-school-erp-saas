@@ -1,0 +1,38 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="QualityDock test management and release readiness">
+  <title>{% block title %}QualityDock{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'qa/app.css' %}">
+</head>
+<body class="{% if user.is_authenticated %}app-shell{% else %}public-shell{% endif %}">
+{% if user.is_authenticated %}
+  <aside class="sidebar">
+    <a class="brand" href="{% url 'dashboard' %}"><span class="brand-mark">QD</span><span><strong>QualityDock</strong><small>Release confidence</small></span></a>
+    <nav class="main-nav">
+      <a class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}"><i>◫</i>Overview</a>
+      <a class="{% if 'product' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'product_list' %}"><i>◇</i>Products</a>
+      <a class="{% if 'case' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'case_list' %}"><i>☷</i>Test library</a>
+      <a class="{% if 'run' in request.resolver_match.url_name or 'execution' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'run_list' %}"><i>▶</i>Test runs</a>
+    </nav>
+    <div class="sidebar-card"><span>QUALITY SIGNAL</span><strong>Trace every release</strong><p>Cases, execution evidence, defects, and decisions in one workspace.</p></div>
+    <div class="sidebar-foot">
+      <div class="workspace"><span class="avatar">{{ organization.name|first|upper }}</span><span><strong>{{ organization.name }}</strong><small>{{ membership.get_role_display }}</small></span></div>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="text-button" type="submit">Sign out</button></form>
+    </div>
+  </aside>
+  <main class="app-main">
+    <header class="mobile-head"><a class="brand" href="{% url 'dashboard' %}"><span class="brand-mark">QD</span><strong>QualityDock</strong></a><a class="button small" href="{% url 'run_create' %}">New run</a></header>
+    {% if messages %}<div class="messages">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+{% else %}
+  <header class="public-header"><a class="brand" href="{% url 'landing' %}"><span class="brand-mark">QD</span><span><strong>QualityDock</strong><small>Release confidence</small></span></a><nav><a href="{% url 'login' %}">Sign in</a><a class="button small" href="{% url 'signup' %}">Start free</a></nav></header>
+  {% if messages %}<div class="messages public-messages">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+  <main>{% block public_content %}{% endblock %}</main>
+{% endif %}
+</body>
+</html>

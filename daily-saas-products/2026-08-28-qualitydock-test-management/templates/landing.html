@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}QualityDock · Release with evidence{% endblock %}
+{% block public_content %}
+<section class="hero public-wrap">
+  <div class="hero-copy"><span class="eyebrow">Test management for modern QA teams</span><h1>Release decisions deserve more than a <em>gut feeling.</em></h1><p>QualityDock connects test design, execution evidence, defects, and readiness metrics so every go/no-go conversation starts with the same facts.</p><div class="hero-actions"><a class="button" href="{% url 'signup' %}">Create a workspace</a><a class="button ghost" href="{% url 'login' %}">Explore the demo</a></div><div class="trust-row"><span>✓ Tenant isolated</span><span>✓ Role controlled</span><span>✓ Evidence ready</span></div></div>
+  <div class="release-card">
+    <div class="release-top"><span><small>RELEASE GATE</small><strong>Web Commerce 4.8.0</strong></span><mark>IN PROGRESS</mark></div>
+    <div class="readiness"><div class="score-ring"><strong>82</strong><small>readiness</small></div><div><span><i class="green"></i>18 passed</span><span><i class="red"></i>2 failed</span><span><i class="amber"></i>1 blocked</span><span><i></i>4 not run</span></div></div>
+    <div class="release-row"><span class="case-id">WEB-014</span><span><strong>Guest checkout with UPI</strong><small>Checkout · Critical</small></span><b class="passed">Passed</b></div>
+    <div class="release-row"><span class="case-id">WEB-021</span><span><strong>Coupon survives payment retry</strong><small>Payments · High</small></span><b class="failed">Failed</b></div>
+    <div class="release-row"><span class="case-id">WEB-032</span><span><strong>Order email after capture</strong><small>Orders · Medium</small></span><b class="blocked">Blocked</b></div>
+  </div>
+</section>
+<section class="feature-grid public-wrap"><article><span>01</span><h2>Design reusable coverage</h2><p>Organize traceable cases by product and suite, with priorities, requirements, steps, and expected results.</p></article><article><span>02</span><h2>Execute with accountability</h2><p>Assign cases, capture actual results and evidence, and require a defect reference for every failure.</p></article><article><span>03</span><h2>Make the release call</h2><p>See completion, pass rate, blockers, and critical failures without rebuilding a status spreadsheet.</p></article></section>
+<section class="workflow public-wrap"><div><span class="eyebrow">A durable quality record</span><h2>From requirement to release signal.</h2></div><ol><li><b>Author</b><span>QA leads create product-scoped, reusable test coverage.</span></li><li><b>Execute</b><span>Testers record results, defects, evidence, and blockers.</span></li><li><b>Decide</b><span>Teams complete runs only after every case is resolved.</span></li></ol></section>
+{% endblock %}

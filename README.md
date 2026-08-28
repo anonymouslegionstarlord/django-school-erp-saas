@@ -19,6 +19,7 @@ The School ERP remains the repository's root application. Independent full-stack
 | 2026-08-25 | ClauseTrack | Multi-tenant contract lifecycle management | [`daily-saas-products/2026-08-25-clausetrack-contracts/README.md`](daily-saas-products/2026-08-25-clausetrack-contracts/README.md) |
 | 2026-08-26 | TalentNest | Multi-tenant applicant tracking and interview management | [`daily-saas-products/2026-08-26-talentnest-ats/README.md`](daily-saas-products/2026-08-26-talentnest-ats/README.md) |
 | 2026-08-27 | SpendPilot | Multi-tenant expense approvals and reimbursement management | [`daily-saas-products/2026-08-27-spendpilot-expenses/README.md`](daily-saas-products/2026-08-27-spendpilot-expenses/README.md) |
+| 2026-08-28 | QualityDock | Multi-tenant QA test management and release readiness | [`daily-saas-products/2026-08-28-qualitydock-test-management/README.md`](daily-saas-products/2026-08-28-qualitydock-test-management/README.md) |
 
 ![Django](https://img.shields.io/badge/Django-5.2_LTS-0c4b33?logo=django)
 ![Python](https://img.shields.io/badge/Python-3.12-3776ab?logo=python&logoColor=white)

@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Create workspace · QualityDock{% endblock %}
+{% block public_content %}
+<section class="auth public-wrap"><div class="auth-copy"><span class="eyebrow">Start with structure</span><h1>Your quality workspace,<br>ready in minutes.</h1><p>Signup creates an isolated workspace, owner account, starter product, and smoke-test suite.</p></div><div class="auth-card"><h2>Create a workspace</h2><p>No payment details required for this portfolio demo.</p><form method="post" class="stack-form">{% csrf_token %}{% for field in form %}<label>{{ field.label }} {{ field }}{% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</label>{% endfor %}<button class="button full" type="submit">Create workspace</button></form><p class="auth-foot">Already registered? <a href="{% url 'login' %}">Sign in</a></p></div></section>
+{% endblock %}
