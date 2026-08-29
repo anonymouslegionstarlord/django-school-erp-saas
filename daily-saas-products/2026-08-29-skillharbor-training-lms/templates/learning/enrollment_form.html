@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Assign course · SkillHarbor{% endblock %}
+{% block content %}
+<section class="narrow-shell shell">
+  <a class="back-link" href="{% url 'enrollment_list' %}">← Learning assignments</a>
+  <header class="page-head compact-head"><div><span class="eyebrow">Create assignment</span><h1>Match learning to a learner</h1><p>Select a published course, learner, and meaningful deadline.</p></div></header>
+  <form method="post" class="panel form-panel">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="form-error">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="form-grid">
+      {% for field in form %}
+        <label {% if field.name == "course" %}class="span-two"{% endif %}><span>{{ field.label }}</span>{{ field }}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</label>
+      {% endfor %}
+    </div>
+    <div class="callout"><strong>Scope is created automatically.</strong><span>Every module in the selected course becomes a trackable progress item for this learner.</span></div>
+    <div class="form-actions"><a class="btn btn-ghost" href="{% url 'enrollment_list' %}">Cancel</a><button class="btn btn-primary" type="submit">Assign learning</button></div>
+  </form>
+</section>
+{% endblock %}

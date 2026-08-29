@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}{{ enrollment.reference }} · SkillHarbor{% endblock %}
+{% block content %}
+<section class="app-shell shell">
+  <a class="back-link" href="{% url 'enrollment_list' %}">← Learning assignments</a>
+  <header class="detail-hero enrollment-hero">
+    <div>
+      <div class="tag-row"><span class="course-code">{{ enrollment.reference }}</span><span class="pill pill-{{ enrollment.status }}">{{ enrollment.get_status_display }}</span>{% if enrollment.is_overdue %}<span class="pill pill-danger">Overdue</span>{% endif %}</div>
+      <h1>{{ enrollment.course.title }}</h1>
+      <p>Assigned to <strong>{{ enrollment.learner.get_full_name|default:enrollment.learner.username }}</strong> by {{ enrollment.assigned_by.username }}.</p>
+      <div class="detail-meta">
+        <span><small>Due date</small><strong>{{ enrollment.due_date|default:"Flexible" }}</strong></span>
+        <span><small>Progress</small><strong>{{ enrollment.progress_percent }}%</strong></span>
+        <span><small>Pass mark</small><strong>{{ enrollment.course.pass_mark }}%</strong></span>
+        <span><small>Final score</small><strong>{% if enrollment.score != None %}{{ enrollment.score }}%{% else %}Not graded{% endif %}</strong></span>
+      </div>
+    </div>
+    <div class="completion-card">
+      <div class="big-ring small-ring" style="--value: {{ enrollment.progress_percent }}"><div><strong>{{ enrollment.progress_percent }}%</strong><span>complete</span></div></div>
+      <span>{{ enrollment.completed_module_count }} of {{ enrollment.total_module_count }} modules</span>
+    </div>
+  </header>
+
+  <div class="detail-layout learning-layout">
+    <section class="panel">
+      <div class="panel-heading"><div><span class="eyebrow">Course journey</span><h2>Module progress</h2></div></div>
+      <div class="progress-list">
+        {% for progress in progress_rows %}
+          <article class="progress-module {% if progress.completed %}is-complete{% endif %}">
+            <div class="progress-check">{% if progress.completed %}✓{% else %}{{ progress.module.order }}{% endif %}</div>
+            <div class="progress-content">
+              <div class="module-title"><h3>{{ progress.module.title }}</h3><span>{{ progress.module.estimated_minutes }} min</span></div>
+              <p>{{ progress.module.content|truncatewords:32 }}</p>
+              {% if progress.module.resource_url %}<a href="{{ progress.module.resource_url }}" target="_blank" rel="noopener noreferrer">Learning resource ↗</a>{% endif %}
+              {% if enrollment.status != "completed" %}
+                <form method="post" action="{% url 'progress_update' enrollment.pk progress.pk %}" class="progress-form">
+                  {% csrf_token %}
+                  <label class="toggle-label"><input type="checkbox" name="completed" {% if progress.completed %}checked{% endif %}><span>Completed</span></label>
+                  <input type="text" name="learner_note" maxlength="500" value="{{ progress.learner_note }}" placeholder="Optional learning note">
+                  <button class="btn btn-secondary btn-small" type="submit">Save</button>
+                </form>
+              {% elif progress.learner_note %}
+                <p class="learner-note">Note: {{ progress.learner_note }}</p>
+              {% endif %}
+            </div>
+          </article>
+        {% empty %}
+          <div class="empty-inline">This assignment has no module scope.</div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <aside class="side-stack">
+      {% if can_grade %}
+      <section class="panel side-panel">
+        <span class="eyebrow">Completion gate</span>
+        <h2>Record final score</h2>
+        {% if enrollment.status == "completed" %}
+          <div class="success-state"><strong>✓ Completed</strong><span>Passed with {{ enrollment.score }}% on {{ enrollment.completed_at|date:"M j, Y" }}.</span></div>
+        {% else %}
+          <p class="muted">Every module must be complete. Scores at or above {{ enrollment.course.pass_mark }}% close the assignment.</p>
+          <form method="post" action="{% url 'enrollment_grade' enrollment.pk %}" class="stack-form compact-form">
+            {% csrf_token %}
+            {% for field in grade_form %}<label><span>{{ field.label }}</span>{{ field }}</label>{% endfor %}
+            <button class="btn btn-primary btn-full" type="submit">Save final score</button>
+          </form>
+        {% endif %}
+      </section>
+      {% endif %}
+      <section class="panel side-panel">
+        <span class="eyebrow">Activity trail</span>
+        <h2>Learning notes</h2>
+        <div class="timeline">
+          {% for activity in activities %}
+            <div class="timeline-item"><span></span><div><strong>{{ activity.actor.username }}</strong><p>{{ activity.message }}</p><small>{{ activity.created_at|timesince }} ago</small></div></div>
+          {% empty %}<p class="muted">No activity yet.</p>{% endfor %}
+        </div>
+        <form method="post" action="{% url 'enrollment_comment' enrollment.pk %}" class="stack-form compact-form">
+          {% csrf_token %}{{ comment_form.message }}
+          <button class="btn btn-secondary btn-full" type="submit">Add note</button>
+        </form>
+      </section>
+    </aside>
+  </div>
+</section>
+{% endblock %}

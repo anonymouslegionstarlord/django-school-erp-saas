@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{ course.code }} · SkillHarbor{% endblock %}
+{% block content %}
+<section class="app-shell shell">
+  <a class="back-link" href="{% url 'course_list' %}">← Course catalog</a>
+  <header class="detail-hero">
+    <div>
+      <div class="tag-row"><span class="course-code">{{ course.code }}</span><span class="pill pill-{{ course.status }}">{{ course.get_status_display }}</span>{% if course.mandatory %}<span class="pill pill-danger">Mandatory</span>{% endif %}</div>
+      <h1>{{ course.title }}</h1>
+      <p>{{ course.summary }}</p>
+      <div class="detail-meta">
+        <span><small>Instructor</small><strong>{{ course.instructor.get_full_name|default:course.instructor.username }}</strong></span>
+        <span><small>Level</small><strong>{{ course.get_level_display }}</strong></span>
+        <span><small>Duration</small><strong>{{ course.estimated_minutes }} min</strong></span>
+        <span><small>Pass mark</small><strong>{{ course.pass_mark }}%</strong></span>
+      </div>
+    </div>
+    {% if manage_course %}
+      <div class="detail-actions">
+        <a class="btn btn-secondary" href="{% url 'course_edit' course.pk %}">Edit course</a>
+        <a class="btn btn-secondary" href="{% url 'module_create' course.pk %}">Add module</a>
+        {% if course.status != "published" %}
+          <form method="post" action="{% url 'course_publish' course.pk %}">{% csrf_token %}<button class="btn btn-primary" type="submit">Publish</button></form>
+        {% else %}
+          <a class="btn btn-primary" href="{% url 'enrollment_create' %}">Assign learner</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </header>
+
+  <div class="detail-layout">
+    <section class="panel">
+      <div class="panel-heading"><div><span class="eyebrow">Curriculum</span><h2>{{ modules|length }} learning modules</h2></div>{% if manage_course %}<a href="{% url 'module_create' course.pk %}">Add module →</a>{% endif %}</div>
+      <div class="module-list">
+        {% for module in modules %}
+          <article class="module-card">
+            <span class="module-order">{{ module.order|stringformat:"02d" }}</span>
+            <div class="module-body">
+              <div class="module-title"><h3>{{ module.title }}</h3><span>{{ module.estimated_minutes }} min</span></div>
+              <p>{{ module.content|linebreaksbr }}</p>
+              {% if module.resource_url %}<a href="{{ module.resource_url }}" rel="noopener noreferrer" target="_blank">Open resource ↗</a>{% endif %}
+            </div>
+            {% if manage_course %}<a class="icon-link" href="{% url 'module_edit' course.pk module.pk %}" aria-label="Edit {{ module.title }}">Edit</a>{% endif %}
+          </article>
+        {% empty %}
+          <div class="empty-inline">No modules yet. Add the first module before publishing.</div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <aside class="panel side-panel">
+      <span class="eyebrow">Delivery snapshot</span>
+      <h2>Recent learners</h2>
+      <div class="learner-list">
+        {% for enrollment in enrollments %}
+          <a href="{% url 'enrollment_detail' enrollment.pk %}">
+            <span class="avatar">{{ enrollment.learner.username|first|upper }}</span>
+            <span><strong>{{ enrollment.learner.get_full_name|default:enrollment.learner.username }}</strong><small>{{ enrollment.progress_percent }}% complete</small></span>
+            <span class="pill pill-{{ enrollment.status }}">{{ enrollment.get_status_display }}</span>
+          </a>
+        {% empty %}
+          <p class="muted">No visible learner assignments yet.</p>
+        {% endfor %}
+      </div>
+      {% if manage_course and course.status == "published" %}<a class="btn btn-secondary btn-full" href="{% url 'enrollment_create' %}">Assign this learning</a>{% endif %}
+    </aside>
+  </div>
+</section>
+{% endblock %}

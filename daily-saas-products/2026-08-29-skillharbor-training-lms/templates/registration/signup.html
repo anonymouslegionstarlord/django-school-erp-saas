@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Create workspace · SkillHarbor{% endblock %}
+{% block content %}
+<section class="auth-shell shell">
+  <div class="auth-aside">
+    <span class="eyebrow">Launch your academy</span>
+    <h1>Your first course starts here.</h1>
+    <p>Create an isolated learning workspace with an owner account and editable starter course.</p>
+    <ul class="clean-list">
+      <li>Course and module authoring</li>
+      <li>Assignments and progress gates</li>
+      <li>Compliance and score reporting</li>
+    </ul>
+  </div>
+  <div class="auth-card auth-card-wide">
+    <h2>Create workspace</h2>
+    <p class="muted">No payment details required for this portfolio demo.</p>
+    <form method="post" class="stack-form">
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="form-error">{{ form.non_field_errors }}</div>{% endif %}
+      {% for field in form %}
+        <label>{{ field.label }}{{ field }}{% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</label>
+      {% endfor %}
+      <button class="btn btn-primary btn-full" type="submit">Create SkillHarbor</button>
+    </form>
+    <p class="auth-foot">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+  </div>
+</section>
+{% endblock %}

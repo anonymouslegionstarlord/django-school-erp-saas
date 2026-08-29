@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}SkillHarbor · Training that ships{% endblock %}
+{% block content %}
+<section class="hero shell">
+  <div class="hero-copy">
+    <span class="eyebrow">Employee learning operations</span>
+    <h1>Turn training into <em>visible progress.</em></h1>
+    <p class="hero-lead">Design structured courses, assign the right learning, prove compliance, and give every employee a clear path forward.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="{% url 'signup' %}">Build your academy</a>
+      <a class="btn btn-secondary" href="{% url 'login' %}">Explore the demo</a>
+    </div>
+    <div class="trust-row">
+      <span>✓ Isolated workspaces</span>
+      <span>✓ Role-aware delivery</span>
+      <span>✓ Audit-ready progress</span>
+    </div>
+  </div>
+  <div class="hero-panel">
+    <div class="panel-top">
+      <span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span>
+      <span class="panel-label">Learning pulse</span>
+    </div>
+    <div class="hero-score">
+      <div><span class="score">84%</span><small>Compliance</small></div>
+      <div class="ring"><span>+12</span><small>this month</small></div>
+    </div>
+    <div class="mini-course">
+      <div class="course-icon">01</div>
+      <div><strong>Security essentials</strong><span>18 of 22 complete</span></div>
+      <span class="status status-green">On track</span>
+    </div>
+    <div class="mini-course">
+      <div class="course-icon coral">02</div>
+      <div><strong>Customer conversations</strong><span>11 of 16 complete</span></div>
+      <span class="status status-amber">4 due</span>
+    </div>
+    <div class="pulse-bar"><span style="width: 72%"></span></div>
+    <p class="panel-note">One workspace for courses, assignments, evidence, and completion.</p>
+  </div>
+</section>
+
+<section class="shell feature-section">
+  <div class="section-heading">
+    <span class="eyebrow">Built for real enablement</span>
+    <h2>From first module to final score.</h2>
+  </div>
+  <div class="feature-grid">
+    <article class="feature-card">
+      <span class="feature-number">01</span>
+      <h3>Author with structure</h3>
+      <p>Organize reusable modules, resource links, durations, levels, and pass marks inside a clean course catalog.</p>
+    </article>
+    <article class="feature-card feature-accent">
+      <span class="feature-number">02</span>
+      <h3>Guide every learner</h3>
+      <p>Assign due dates, track module-by-module progress, capture notes, and surface overdue learning early.</p>
+    </article>
+    <article class="feature-card">
+      <span class="feature-number">03</span>
+      <h3>Prove readiness</h3>
+      <p>Completion gates, final scores, mandatory-course metrics, and activity history make outcomes reviewable.</p>
+    </article>
+  </div>
+</section>
+{% endblock %}

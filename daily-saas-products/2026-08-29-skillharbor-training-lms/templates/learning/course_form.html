@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{% if course %}Edit course{% else %}New course{% endif %} · SkillHarbor{% endblock %}
+{% block content %}
+<section class="narrow-shell shell">
+  <a class="back-link" href="{% if course %}{% url 'course_detail' course.pk %}{% else %}{% url 'course_list' %}{% endif %}">← Back to courses</a>
+  <header class="page-head compact-head"><div><span class="eyebrow">Course authoring</span><h1>{% if course %}Edit {{ course.code }}{% else %}Create a course{% endif %}</h1><p>Define the learning promise, ownership, and completion standard.</p></div></header>
+  <form method="post" class="panel form-panel">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="form-error">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="form-grid">
+      {% for field in form %}
+        <label class="{% if field.name == 'summary' %}span-two{% endif %}">
+          <span>{{ field.label }}</span>
+          {{ field }}
+          {% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}
+          {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+        </label>
+      {% endfor %}
+    </div>
+    <div class="form-actions"><a class="btn btn-ghost" href="{% url 'course_list' %}">Cancel</a><button class="btn btn-primary" type="submit">Save course</button></div>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Courses · SkillHarbor{% endblock %}
+{% block content %}
+<section class="app-shell shell">
+  <header class="page-head">
+    <div><span class="eyebrow">Learning catalog</span><h1>Courses</h1><p>Structured programs for every stage of employee growth.</p></div>
+    {% if active_membership.can_author %}<a class="btn btn-primary" href="{% url 'course_create' %}">New course</a>{% endif %}
+  </header>
+
+  <form method="get" class="filter-bar">
+    <label class="search-field"><span>Search</span><input type="search" name="q" value="{{ query }}" placeholder="Code, title, or topic"></label>
+    <label><span>Category</span><select name="category"><option value="">All categories</option>{% for value, label in categories %}<option value="{{ value }}" {% if category == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+    <label><span>Status</span><select name="status"><option value="">All statuses</option>{% for value, label in statuses %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+    <button class="btn btn-secondary" type="submit">Filter</button>
+  </form>
+
+  <div class="course-grid course-grid-large">
+    {% for course in courses %}
+      <a class="course-card" href="{% url 'course_detail' course.pk %}">
+        <div class="card-top"><span class="course-code">{{ course.code }}</span><span class="pill pill-{{ course.status }}">{{ course.get_status_display }}</span></div>
+        <span class="category">{{ course.get_category_display }} · {{ course.get_level_display }}</span>
+        <h2>{{ course.title }}</h2>
+        <p>{{ course.summary|truncatewords:24 }}</p>
+        <div class="tag-row">{% if course.mandatory %}<span class="tag">Mandatory</span>{% endif %}<span class="tag">{{ course.pass_mark }}% pass mark</span></div>
+        <footer><span>{{ course.modules.count }} modules</span><span>{{ course.estimated_minutes }} min</span><span>{{ course.instructor.username }}</span></footer>
+      </a>
+    {% empty %}
+      <div class="empty-state">
+        <span class="empty-icon">◎</span><h2>No courses found</h2><p>Adjust the filters or create the first course in this workspace.</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

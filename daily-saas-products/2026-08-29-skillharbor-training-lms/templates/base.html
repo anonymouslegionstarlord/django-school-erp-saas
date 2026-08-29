@@ -1,0 +1,64 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="SkillHarbor employee training and compliance workspace">
+  <title>{% block title %}SkillHarbor{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'learning/app.css' %}">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <header class="site-header">
+    <div class="shell nav-wrap">
+      <a class="brand" href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'landing' %}{% endif %}">
+        <span class="brand-mark">S</span>
+        <span>SkillHarbor</span>
+      </a>
+      {% if user.is_authenticated %}
+        <nav class="main-nav" aria-label="Main navigation">
+          <a href="{% url 'dashboard' %}">Overview</a>
+          <a href="{% url 'course_list' %}">Courses</a>
+          <a href="{% url 'enrollment_list' %}">Learning</a>
+        </nav>
+        <div class="account">
+          <div class="account-copy">
+            <strong>{{ user.get_full_name|default:user.username }}</strong>
+            <span>{{ active_membership.get_role_display }} · {{ active_organization.name }}</span>
+          </div>
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button class="btn btn-ghost btn-small" type="submit">Sign out</button>
+          </form>
+        </div>
+      {% else %}
+        <nav class="public-nav">
+          <a href="{% url 'login' %}">Sign in</a>
+          <a class="btn btn-primary btn-small" href="{% url 'signup' %}">Create workspace</a>
+        </nav>
+      {% endif %}
+    </div>
+  </header>
+
+  {% if messages %}
+    <div class="shell message-stack" aria-live="polite">
+      {% for message in messages %}
+        <div class="message message-{{ message.tags|default:'info' }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <main>{% block content %}{% endblock %}</main>
+  <footer class="site-footer">
+    <div class="shell footer-wrap">
+      <span>SkillHarbor · learning that proves progress</span>
+      <span>Secure Django SaaS portfolio project</span>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Overview · SkillHarbor{% endblock %}
+{% block content %}
+<section class="app-shell shell">
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">{{ active_organization.name }}</span>
+      {% if active_membership.role == "learner" %}
+        <h1>Your learning runway</h1>
+        <p>Keep momentum across every assigned course.</p>
+      {% else %}
+        <h1>Learning operations</h1>
+        <p>A live view of course delivery, completion, and compliance.</p>
+      {% endif %}
+    </div>
+    {% if active_membership.can_author %}
+      <div class="page-actions">
+        <a class="btn btn-secondary" href="{% url 'enrollment_create' %}">Assign course</a>
+        <a class="btn btn-primary" href="{% url 'course_create' %}">New course</a>
+      </div>
+    {% endif %}
+  </header>
+
+  <div class="metric-grid">
+    <article class="metric-card metric-dark"><span>Completion rate</span><strong>{{ completion_rate }}%</strong><small>{{ completed_count }} of {{ enrollment_count }} assignments</small></article>
+    <article class="metric-card"><span>In progress</span><strong>{{ in_progress_count }}</strong><small>Active learning journeys</small></article>
+    <article class="metric-card"><span>Overdue</span><strong>{{ overdue_count }}</strong><small>Assignments needing attention</small></article>
+    <article class="metric-card"><span>Average score</span><strong>{% if average_score != None %}{{ average_score }}%{% else %}—{% endif %}</strong><small>Across graded learning</small></article>
+  </div>
+
+  <div class="dashboard-grid">
+    <section class="panel">
+      <div class="panel-heading">
+        <div><span class="eyebrow">Current workload</span><h2>Learning assignments</h2></div>
+        <a href="{% url 'enrollment_list' %}">View all →</a>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Course</th><th>Learner</th><th>Progress</th><th>Due</th><th>Status</th></tr></thead>
+          <tbody>
+          {% for enrollment in recent_enrollments %}
+            <tr>
+              <td><a class="table-title" href="{% url 'enrollment_detail' enrollment.pk %}">{{ enrollment.course.code }} · {{ enrollment.course.title }}</a></td>
+              <td>{{ enrollment.learner.get_full_name|default:enrollment.learner.username }}</td>
+              <td><div class="progress compact"><span style="width: {{ enrollment.progress_percent }}%"></span></div><small>{{ enrollment.progress_percent }}%</small></td>
+              <td>{{ enrollment.due_date|default:"Flexible" }}</td>
+              <td>{% if enrollment.is_overdue %}<span class="pill pill-danger">Overdue</span>{% else %}<span class="pill pill-{{ enrollment.status }}">{{ enrollment.get_status_display }}</span>{% endif %}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5" class="empty-cell">No learning assignments yet.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <aside class="panel pulse-card">
+      <span class="eyebrow">Compliance pulse</span>
+      <div class="big-ring" style="--value: {{ mandatory_rate }}"><div><strong>{{ mandatory_rate }}%</strong><span>mandatory complete</span></div></div>
+      <div class="pulse-row"><span>Published courses</span><strong>{{ course_count }}</strong></div>
+      <div class="pulse-row"><span>Completed learning</span><strong>{{ completed_count }}</strong></div>
+      <div class="pulse-row"><span>Still in motion</span><strong>{{ in_progress_count }}</strong></div>
+      <a class="btn btn-secondary btn-full" href="{% url 'course_list' %}">Browse catalog</a>
+    </aside>
+  </div>
+
+  {% if featured_courses %}
+  <section class="section-block">
+    <div class="panel-heading"><div><span class="eyebrow">Catalog</span><h2>Published learning</h2></div></div>
+    <div class="course-grid">
+      {% for course in featured_courses %}
+        <a class="course-card" href="{% url 'course_detail' course.pk %}">
+          <span class="course-code">{{ course.code }}</span>
+          <span class="pill">{{ course.get_category_display }}</span>
+          <h3>{{ course.title }}</h3>
+          <p>{{ course.summary|truncatewords:18 }}</p>
+          <footer><span>{{ course.modules.count }} modules</span><span>{{ course.estimated_minutes }} min</span></footer>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Learning assignments · SkillHarbor{% endblock %}
+{% block content %}
+<section class="app-shell shell">
+  <header class="page-head">
+    <div><span class="eyebrow">Delivery and compliance</span><h1>Learning assignments</h1><p>Follow every learner from assignment to verified completion.</p></div>
+    {% if active_membership.can_author %}<a class="btn btn-primary" href="{% url 'enrollment_create' %}">Assign course</a>{% endif %}
+  </header>
+
+  <form method="get" class="filter-bar">
+    <label class="search-field"><span>Search</span><input type="search" name="q" value="{{ query }}" placeholder="Learner or course"></label>
+    <label><span>Course</span><select name="course"><option value="">All courses</option>{% for course in courses %}<option value="{{ course.pk }}" {% if course_id == course.pk|stringformat:"s" %}selected{% endif %}>{{ course.code }}</option>{% endfor %}</select></label>
+    <label><span>Status</span><select name="status"><option value="">All statuses</option>{% for value, label in statuses %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+    <label class="check-filter"><input type="checkbox" name="overdue" value="1" {% if overdue == "1" %}checked{% endif %}><span>Overdue only</span></label>
+    <button class="btn btn-secondary" type="submit">Filter</button>
+  </form>
+
+  <section class="panel">
+    <div class="table-wrap">
+      <table class="large-table">
+        <thead><tr><th>Assignment</th><th>Learner</th><th>Due date</th><th>Progress</th><th>Score</th><th>Status</th></tr></thead>
+        <tbody>
+        {% for enrollment in enrollments %}
+          <tr>
+            <td><a class="table-title" href="{% url 'enrollment_detail' enrollment.pk %}"><small>{{ enrollment.reference }} · {{ enrollment.course.code }}</small>{{ enrollment.course.title }}</a></td>
+            <td><div class="person"><span class="avatar">{{ enrollment.learner.username|first|upper }}</span><span>{{ enrollment.learner.get_full_name|default:enrollment.learner.username }}</span></div></td>
+            <td>{% if enrollment.due_date %}{{ enrollment.due_date }}{% else %}<span class="muted">Flexible</span>{% endif %}</td>
+            <td><div class="progress"><span style="width: {{ enrollment.progress_percent }}%"></span></div><small>{{ enrollment.completed_module_count }}/{{ enrollment.total_module_count }} modules</small></td>
+            <td>{% if enrollment.score != None %}<strong>{{ enrollment.score }}%</strong>{% else %}<span class="muted">Not graded</span>{% endif %}</td>
+            <td>{% if enrollment.is_overdue %}<span class="pill pill-danger">Overdue</span>{% else %}<span class="pill pill-{{ enrollment.status }}">{{ enrollment.get_status_display }}</span>{% endif %}</td>
+          </tr>
+        {% empty %}
+          <tr><td class="empty-cell" colspan="6">No assignments match these filters.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>
+{% endblock %}

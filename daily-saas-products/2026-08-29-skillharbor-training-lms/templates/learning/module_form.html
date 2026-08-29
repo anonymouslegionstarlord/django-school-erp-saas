@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{% if module %}Edit module{% else %}New module{% endif %} · SkillHarbor{% endblock %}
+{% block content %}
+<section class="narrow-shell shell">
+  <a class="back-link" href="{% url 'course_detail' course.pk %}">← {{ course.code }} · {{ course.title }}</a>
+  <header class="page-head compact-head"><div><span class="eyebrow">Curriculum builder</span><h1>{% if module %}Edit module {{ module.order }}{% else %}Add learning module{% endif %}</h1><p>Make each step focused, useful, and easy to complete.</p></div></header>
+  <form method="post" class="panel form-panel">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="form-error">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="form-grid">
+      {% for field in form %}
+        <label class="{% if field.name == 'content' or field.name == 'resource_url' %}span-two{% endif %}">
+          <span>{{ field.label }}</span>{{ field }}
+          {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+        </label>
+      {% endfor %}
+    </div>
+    <div class="form-actions"><a class="btn btn-ghost" href="{% url 'course_detail' course.pk %}">Cancel</a><button class="btn btn-primary" type="submit">Save module</button></div>
+  </form>
+</section>
+{% endblock %}
