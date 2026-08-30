@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Create workspace · OpsBeacon{% endblock %}
+{% block content %}
+<section class="auth-shell shell">
+  <div class="auth-copy"><span class="eyebrow"><i></i> Start operating clearly</span><h1>Build your reliability workspace.</h1><p>Registration creates an isolated organization, owner account, public status page, and editable starter service.</p><ul class="clean-list"><li>Incident command and responders</li><li>Service health and public updates</li><li>SLA metrics and follow-up actions</li></ul></div>
+  <div class="auth-card auth-wide"><h2>Create workspace</h2><p class="muted">No payment details required for this portfolio demo.</p><form method="post" class="stack-form">{% csrf_token %}{% if form.non_field_errors %}<div class="form-error">{{ form.non_field_errors }}</div>{% endif %}{% for field in form %}<label><span>{{ field.label }}</span>{{ field }}{% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>{% endfor %}<button class="btn btn-primary btn-full" type="submit">Create OpsBeacon</button></form><p class="auth-foot">Already operating here? <a href="{% url 'login' %}">Sign in</a></p></div>
+</section>
+{% endblock %}

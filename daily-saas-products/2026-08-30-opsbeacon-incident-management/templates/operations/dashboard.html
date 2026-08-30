@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Command center · OpsBeacon{% endblock %}
+{% block content %}
+<section class="app-shell shell">
+  <header class="page-head"><div><span class="eyebrow"><i></i> {{ active_organization.name }}</span><h1>Reliability command</h1><p>Live service health, incident pressure, and response performance.</p></div>{% if active_membership.can_respond %}<a class="btn btn-alert" href="{% url 'incident_create' %}">Declare incident</a>{% endif %}</header>
+  <div class="metric-grid">
+    <article class="metric primary"><span>Active incidents</span><strong>{{ active_count }}</strong><small>{{ critical_count }} critical or high</small></article>
+    <article class="metric"><span>Affected services</span><strong>{{ affected_services }}/{{ service_count }}</strong><small>Current component health</small></article>
+    <article class="metric"><span>30-day MTTR</span><strong>{% if mttr != None %}{{ mttr }}m{% else %}—{% endif %}</strong><small>{{ resolved_count }} resolved incidents</small></article>
+    <article class="metric"><span>Active SLA breaches</span><strong>{{ sla_breaches }}</strong><small>Beyond severity target</small></article>
+  </div>
+  <div class="command-grid">
+    <section class="panel">
+      <div class="panel-heading"><div><span class="eyebrow"><i></i> Live response</span><h2>Active incidents</h2></div><a href="{% url 'incident_list' %}">All incidents →</a></div>
+      <div class="incident-stack">{% for incident in active_incidents %}<a class="incident-row" href="{% url 'incident_detail' incident.pk %}"><span class="severity {{ incident.severity }}">{{ incident.get_severity_display }}</span><div><strong>{{ incident.title }}</strong><small>{{ incident.reference }} · {{ incident.service.name }}</small></div><div class="incident-time"><strong>{{ incident.duration_minutes }}m</strong><small>of {{ incident.resolution_target_minutes }}m target</small></div><span class="pill pill-{{ incident.status }}">{{ incident.get_status_display }}</span></a>{% empty %}<div class="no-incidents compact-empty"><span>✓</span><h3>No active incidents</h3><p>The response queue is clear.</p></div>{% endfor %}</div>
+    </section>
+    <aside class="panel service-panel"><div class="panel-heading"><div><span class="eyebrow"><i></i> Components</span><h2>Service health</h2></div><a href="{% url 'service_list' %}">Manage →</a></div><div class="service-mini-list">{% for service in services %}<div><span class="health-dot state-{{ service.status }}"></span><span><strong>{{ service.name }}</strong><small>{{ service.get_status_display }}</small></span><strong>{{ service.incidents.count }}</strong></div>{% empty %}<p class="muted">No services configured.</p>{% endfor %}</div><a class="btn btn-secondary btn-full" href="{% url 'public_status' active_organization.slug %}" target="_blank">Open public status ↗</a></aside>
+  </div>
+  {% if recently_resolved %}<section class="resolved-section"><div class="panel-heading"><div><span class="eyebrow"><i></i> Recovery</span><h2>Recently resolved</h2></div></div><div class="resolved-grid">{% for incident in recently_resolved %}<a href="{% url 'incident_detail' incident.pk %}"><span class="mono">{{ incident.reference }}</span><h3>{{ incident.title }}</h3><p>{{ incident.service.name }}</p><footer><span>{{ incident.duration_minutes }}m duration</span><span>{% if incident.sla_breached %}Target missed{% else %}Within target{% endif %}</span></footer></a>{% endfor %}</div></section>{% endif %}
+</section>
+{% endblock %}

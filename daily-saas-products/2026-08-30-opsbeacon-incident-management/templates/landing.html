@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}OpsBeacon · Incident response without the chaos{% endblock %}
+{% block content %}
+<section class="hero shell">
+  <div class="hero-copy">
+    <span class="eyebrow"><i></i> Reliability command center</span>
+    <h1>When systems break, <em>clarity moves faster.</em></h1>
+    <p>Coordinate responders, publish trustworthy updates, protect service health, and turn every incident into a stronger operation.</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="{% url 'signup' %}">Launch command center</a><a class="btn btn-secondary" href="{% url 'login' %}">Open the demo</a></div>
+    <div class="trust-row"><span>Tenant-isolated</span><span>Role-aware</span><span>Audit-ready</span></div>
+  </div>
+  <div class="command-preview">
+    <div class="preview-top"><span class="live-dot"></span><strong>Live response</strong><span class="mono">09:42:18 UTC</span></div>
+    <div class="incident-preview">
+      <div class="severity sev1">SEV-1</div>
+      <div><span class="mono">INC-2026-0142</span><h3>Checkout requests timing out</h3><p>Customer API · Investigating</p></div>
+    </div>
+    <div class="preview-metrics"><div><strong>3</strong><span>Responders</span></div><div><strong>18m</strong><span>Elapsed</span></div><div><strong>4m</strong><span>Last update</span></div></div>
+    <div class="timeline-preview">
+      <div><i></i><span><strong>09:38</strong> Database saturation identified</span></div>
+      <div><i></i><span><strong>09:31</strong> Traffic shifted to healthy pool</span></div>
+      <div><i></i><span><strong>09:24</strong> Incident declared</span></div>
+    </div>
+    <div class="health-strip"><span></span><span></span><span class="warn"></span><span></span><span></span></div>
+  </div>
+</section>
+<section class="shell feature-section">
+  <header><span class="eyebrow"><i></i> One operational truth</span><h2>From first alert to final action.</h2></header>
+  <div class="feature-grid">
+    <article><span class="mono">01 / DETECT</span><h3>See impact immediately</h3><p>Severity targets, affected services, SLA clocks, and live response health stay visible to the whole team.</p></article>
+    <article class="accent"><span class="mono">02 / RESPOND</span><h3>Coordinate without noise</h3><p>Commanders, responders, internal context, and customer-safe updates share one chronological record.</p></article>
+    <article><span class="mono">03 / IMPROVE</span><h3>Close the learning loop</h3><p>Resolution gates and owned follow-up actions turn incident evidence into measurable reliability work.</p></article>
+  </div>
+</section>
+{% endblock %}

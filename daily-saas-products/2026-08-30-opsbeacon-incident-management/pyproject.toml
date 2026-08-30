@@ -1,0 +1,21 @@
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+extend-exclude = ["operations/migrations"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "DJ", "UP"]
+ignore = ["DJ001"]
+
+[tool.coverage.run]
+source = ["operations"]
+omit = [
+  "operations/admin.py",
+  "operations/apps.py",
+  "operations/migrations/*",
+]
+
+[tool.coverage.report]
+fail_under = 88
+show_missing = true
+skip_covered = true

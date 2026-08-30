@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Sign in · OpsBeacon{% endblock %}
+{% block content %}
+<section class="auth-shell shell">
+  <div class="auth-copy"><span class="eyebrow"><i></i> Secure operations access</span><h1>Return to the command center.</h1><p>Your service health, active incidents, and response work are waiting in one tenant-isolated workspace.</p><div class="signal-card"><span class="live-dot"></span><div><strong>Systems are observable</strong><small>Authenticate to see internal operational context.</small></div></div></div>
+  <div class="auth-card"><h2>Sign in</h2><p class="muted">Use your workspace or demo credentials.</p><form method="post" class="stack-form">{% csrf_token %}{% if form.non_field_errors %}<div class="form-error">{{ form.non_field_errors }}</div>{% endif %}{% for field in form %}<label><span>{{ field.label }}</span>{{ field }}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>{% endfor %}{% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}<button class="btn btn-primary btn-full" type="submit">Enter command center</button></form><p class="auth-foot">Need a workspace? <a href="{% url 'signup' %}">Create one</a></p></div>
+</section>
+{% endblock %}

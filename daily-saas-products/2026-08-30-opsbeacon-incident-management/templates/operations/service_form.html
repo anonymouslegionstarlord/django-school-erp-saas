@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}{% if service %}Edit service{% else %}New service{% endif %} · OpsBeacon{% endblock %}
+{% block content %}
+<section class="narrow-shell shell">
+  <a class="back-link" href="{% url 'service_list' %}">← Service catalog</a>
+  <header class="page-head compact-head"><div><span class="eyebrow"><i></i> Component configuration</span><h1>{% if service %}Edit {{ service.name }}{% else %}Add a service{% endif %}</h1><p>Define ownership, current health, and public visibility.</p></div></header>
+  <form method="post" class="panel form-panel">{% csrf_token %}{% if form.non_field_errors %}<div class="form-error">{{ form.non_field_errors }}</div>{% endif %}<div class="form-grid">{% for field in form %}<label class="{% if field.name == 'description' %}span-two{% endif %}"><span>{{ field.label }}</span>{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>{% endfor %}</div><div class="form-actions"><a class="btn btn-ghost" href="{% url 'service_list' %}">Cancel</a><button class="btn btn-primary" type="submit">Save service</button></div></form>
+</section>
+{% endblock %}

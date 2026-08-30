@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Declare incident · OpsBeacon{% endblock %}
+{% block content %}
+<section class="narrow-shell shell">
+  <a class="back-link" href="{% url 'incident_list' %}">← Incident history</a>
+  <header class="page-head compact-head"><div><span class="eyebrow danger-eye"><i></i> Start coordinated response</span><h1>Declare an incident</h1><p>Capture what is known now. The timeline will preserve each change.</p></div></header>
+  <form method="post" class="panel form-panel incident-form">{% csrf_token %}{% if form.non_field_errors %}<div class="form-error">{{ form.non_field_errors }}</div>{% endif %}<div class="form-grid">{% for field in form %}<label class="{% if field.name == 'summary' or field.name == 'customer_impact' or field.name == 'title' %}span-two{% endif %}"><span>{{ field.label }}</span>{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</label>{% endfor %}</div><div class="declaration-note"><span>!</span><div><strong>Declaring immediately starts the SLA clock.</strong><p>The commander is assigned automatically and the service state changes based on severity.</p></div></div><div class="form-actions"><a class="btn btn-ghost" href="{% url 'incident_list' %}">Cancel</a><button class="btn btn-alert" type="submit">Declare and start response</button></div></form>
+</section>
+{% endblock %}
