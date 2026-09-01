@@ -1,0 +1,16 @@
+{% extends "dispatch/base.html" %}
+{% block title %}{{ title }} · RoutePilot{% endblock %}
+{% block content %}
+<div class="app-shell narrow-shell">
+  <a class="back-link" href="javascript:history.back()">← Back</a>
+  <section class="page-heading"><span class="eyebrow">{{ eyebrow }}</span><h1>{{ title }}</h1>{% if shipment %}<p>{{ shipment.customer.name }} · {{ shipment.weight_kg }} kg</p>{% endif %}</section>
+  <section class="form-panel">
+    <form method="post" class="stack-form form-grid">
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="form-alert full-span">{{ form.non_field_errors }}</div>{% endif %}
+      {% for field in form %}<label class="{% if field.field.widget.input_type == 'textarea' %}full-span{% endif %}">{{ field.label }}{{ field }}{% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</label>{% endfor %}
+      <div class="form-actions full-span"><a class="button button-ghost-light" href="javascript:history.back()">Cancel</a><button class="button button-dark" type="submit">Save and continue →</button></div>
+    </form>
+  </section>
+</div>
+{% endblock %}

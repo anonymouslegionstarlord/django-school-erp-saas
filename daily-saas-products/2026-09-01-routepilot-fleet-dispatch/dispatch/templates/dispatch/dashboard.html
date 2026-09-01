@@ -1,0 +1,47 @@
+{% extends "dispatch/base.html" %}
+{% block title %}Control tower · RoutePilot{% endblock %}
+{% block content %}
+<div class="app-shell">
+  <section class="page-heading heading-row">
+    <div><span class="eyebrow">Control tower</span><h1>Good morning, {{ user.first_name|default:user.username }}.</h1><p>Here is what is moving across {{ current_organization.name }}.</p></div>
+    {% if current_membership.can_manage %}<a class="button button-dark" href="{% url 'shipment_create' %}">+ New shipment</a>{% endif %}
+  </section>
+  <section class="metric-grid">
+    <article class="metric-card accent-card"><span>Active routes</span><strong>{{ metrics.active_routes }}</strong><small>Currently assigned or moving</small></article>
+    <article class="metric-card"><span>Awaiting dispatch</span><strong>{{ metrics.awaiting_dispatch }}</strong><small>Ready for a driver and vehicle</small></article>
+    <article class="metric-card"><span>Due today</span><strong>{{ metrics.due_today }}</strong><small>{{ metrics.overdue }} currently overdue</small></article>
+    <article class="metric-card"><span>30-day on-time</span><strong>{{ metrics.on_time_rate }}%</strong><small>Delivered before deadline</small></article>
+  </section>
+  <section class="dashboard-grid">
+    <article class="panel panel-wide">
+      <div class="panel-heading"><div><span class="eyebrow">Live operations</span><h2>Active dispatches</h2></div><a href="{% url 'shipment_list' %}?status=in_transit">View all →</a></div>
+      <div class="route-list">
+        {% for shipment in active_assignments %}
+          <a class="route-row" href="{% url 'shipment_detail' shipment.pk %}">
+            <span class="route-icon">↗</span><span class="route-main"><strong>{{ shipment.tracking_code }}</strong><small>{{ shipment.customer.name }} · {{ shipment.delivery_address|truncatechars:42 }}</small></span>
+            <span class="route-assignee">{% if shipment.assignment %}<strong>{{ shipment.assignment.driver }}</strong><small>{{ shipment.assignment.vehicle.registration }}</small>{% else %}<small>Not assigned</small>{% endif %}</span>
+            <span class="badge badge-{{ shipment.status }}">{{ shipment.get_status_display }}</span>
+          </a>
+        {% empty %}<div class="empty-state"><span>◎</span><h3>No active routes</h3><p>Assigned shipments will appear here.</p></div>{% endfor %}
+      </div>
+    </article>
+    <article class="panel">
+      <div class="panel-heading"><div><span class="eyebrow">Fleet pulse</span><h2>Capacity</h2></div><a href="{% url 'fleet_list' %}">Manage →</a></div>
+      <div class="fleet-ring"><div><strong>{{ fleet_metrics.available }}</strong><span>available</span></div></div>
+      <dl class="mini-stats"><div><dt>On route</dt><dd>{{ fleet_metrics.on_route }}</dd></div><div><dt>Service due</dt><dd>{{ fleet_metrics.service_due }}</dd></div><div><dt>Free capacity</dt><dd>{{ fleet_metrics.available_capacity|floatformat:0 }} kg</dd></div></dl>
+    </article>
+    <article class="panel">
+      <div class="panel-heading"><div><span class="eyebrow">Attention</span><h2>Priority queue</h2></div></div>
+      <div class="priority-list">
+        {% for shipment in urgent_shipments %}<a href="{% url 'shipment_detail' shipment.pk %}"><span class="priority-dot"></span><span><strong>{{ shipment.tracking_code }}</strong><small>{{ shipment.delivery_deadline|date:"D, H:i" }}</small></span><span class="badge badge-{{ shipment.status }}">{{ shipment.get_status_display }}</span></a>{% empty %}<p class="muted">No urgent shipments need attention.</p>{% endfor %}
+      </div>
+    </article>
+    <article class="panel panel-wide">
+      <div class="panel-heading"><div><span class="eyebrow">Pipeline</span><h2>Shipment flow</h2></div></div>
+      <div class="status-track">
+        {% for row in status_rows %}<div><span class="status-count">{{ row.count }}</span><span class="status-bar status-{{ row.status }}"></span><small>{{ row.label }}</small></div>{% endfor %}
+      </div>
+    </article>
+  </section>
+</div>
+{% endblock %}

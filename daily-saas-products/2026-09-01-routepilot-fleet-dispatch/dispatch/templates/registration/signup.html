@@ -1,0 +1,24 @@
+{% extends "dispatch/base.html" %}
+{% block title %}Create workspace · RoutePilot{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-aside">
+    <a class="brand brand-light" href="{% url 'landing' %}"><span class="brand-mark">R</span><span>RoutePilot</span></a>
+    <div><span class="eyebrow lime">Your operation, organized</span><h1>Set the route. Keep every promise.</h1><p>Create an isolated workspace and turn daily delivery work into a dependable system.</p></div>
+    <ul class="check-list"><li>Role-aware access</li><li>Fleet capacity checks</li><li>Customer-visible updates</li></ul>
+  </div>
+  <div class="auth-panel">
+    <div class="auth-card auth-card-wide">
+      <span class="eyebrow">Get started</span><h2>Create your workspace</h2><p>Your first account becomes the workspace owner.</p>
+      <form method="post" class="stack-form two-column-form">
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="form-alert full-span">{{ form.non_field_errors }}</div>{% endif %}
+        {% for field in form %}<label {% if field.name == 'workspace_name' or field.name == 'password1' or field.name == 'password2' %}class="full-span"{% endif %}>{{ field.label }}{{ field }}{% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</label>{% endfor %}
+        <button class="button button-dark button-full full-span" type="submit">Create RoutePilot workspace <span>→</span></button>
+      </form>
+      <p class="auth-switch">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

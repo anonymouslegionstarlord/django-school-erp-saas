@@ -23,6 +23,7 @@ The School ERP remains the repository's root application. Independent full-stack
 | 2026-08-29 | SkillHarbor | Multi-tenant employee training and compliance LMS | [`daily-saas-products/2026-08-29-skillharbor-training-lms/README.md`](daily-saas-products/2026-08-29-skillharbor-training-lms/README.md) |
 | 2026-08-30 | OpsBeacon | Multi-tenant incident response and service reliability | [`daily-saas-products/2026-08-30-opsbeacon-incident-management/README.md`](daily-saas-products/2026-08-30-opsbeacon-incident-management/README.md) |
 | 2026-08-31 | VendorSentry | Multi-tenant third-party vendor risk and remediation | [`daily-saas-products/2026-08-31-vendorsentry-vendor-risk/README.md`](daily-saas-products/2026-08-31-vendorsentry-vendor-risk/README.md) |
+| 2026-09-01 | RoutePilot | Multi-tenant fleet dispatch and delivery operations | [`daily-saas-products/2026-09-01-routepilot-fleet-dispatch/README.md`](daily-saas-products/2026-09-01-routepilot-fleet-dispatch/README.md) |
 
 ![Django](https://img.shields.io/badge/Django-5.2_LTS-0c4b33?logo=django)
 ![Python](https://img.shields.io/badge/Python-3.12-3776ab?logo=python&logoColor=white)

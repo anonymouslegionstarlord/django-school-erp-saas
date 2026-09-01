@@ -1,0 +1,11 @@
+{% extends "dispatch/base.html" %}
+{% block title %}Fleet · RoutePilot{% endblock %}
+{% block content %}
+<div class="app-shell">
+  <section class="page-heading heading-row"><div><span class="eyebrow">People and equipment</span><h1>Fleet</h1><p>Keep capacity, availability, licenses, and service readiness visible.</p></div>{% if current_membership.can_manage %}<div class="button-row"><a class="button button-outline" href="{% url 'driver_create' %}">+ Invite driver</a><a class="button button-dark" href="{% url 'vehicle_create' %}">+ Add vehicle</a></div>{% endif %}</section>
+  <section class="split-section">
+    <div><div class="section-heading"><span class="eyebrow">Equipment</span><h2>Vehicles</h2></div><div class="fleet-cards">{% for vehicle in vehicles %}<article class="fleet-card {% if vehicle.is_service_due %}service-warning{% endif %}"><div class="vehicle-illustration"><span>{{ vehicle.get_kind_display|first }}</span></div><div class="fleet-card-head"><div><strong>{{ vehicle.registration }}</strong><h3>{{ vehicle.name }}</h3></div><span class="badge badge-{{ vehicle.status }}">{{ vehicle.get_status_display }}</span></div><dl class="mini-stats"><div><dt>Capacity</dt><dd>{{ vehicle.capacity_kg|floatformat:0 }} kg</dd></div><div><dt>Odometer</dt><dd>{{ vehicle.odometer_km }} km</dd></div><div><dt>Service at</dt><dd>{{ vehicle.next_service_km }} km</dd></div></dl>{% if vehicle.is_service_due %}<p class="warning-note">Service is due before the next dispatch.</p>{% endif %}</article>{% empty %}<div class="empty-state"><p>No vehicles added.</p></div>{% endfor %}</div></div>
+    <div><div class="section-heading"><span class="eyebrow">Team</span><h2>Drivers</h2></div><div class="driver-list">{% for driver in drivers %}<article><div class="avatar small-avatar">{{ driver.user.first_name|first|default:"D" }}</div><div class="driver-main"><strong>{{ driver }}</strong><small>{{ driver.license_number }} · expires {{ driver.license_expiry|date:"M Y" }}</small></div><span class="badge badge-{{ driver.status }}">{{ driver.get_status_display }}</span>{% if not driver.is_license_valid %}<span class="overdue-flag">Expired license</span>{% endif %}</article>{% empty %}<div class="empty-state"><p>No drivers invited.</p></div>{% endfor %}</div></div>
+  </section>
+</div>
+{% endblock %}

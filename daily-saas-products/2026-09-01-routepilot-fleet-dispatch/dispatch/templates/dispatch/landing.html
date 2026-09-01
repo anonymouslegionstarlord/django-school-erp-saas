@@ -1,0 +1,50 @@
+{% extends "dispatch/base.html" %}
+{% block title %}RoutePilot · Fleet dispatch without blind spots{% endblock %}
+{% block body_class %}marketing-page{% endblock %}
+{% block content %}
+<header class="marketing-nav shell">
+  <a class="brand" href="{% url 'landing' %}"><span class="brand-mark">R</span><span>RoutePilot</span></a>
+  <div class="marketing-actions">
+    <a class="quiet-link" href="{% url 'login' %}">Sign in</a>
+    <a class="button button-dark button-small" href="{% url 'signup' %}">Start dispatching</a>
+  </div>
+</header>
+<section class="hero shell">
+  <div class="hero-copy">
+    <span class="eyebrow lime">Fleet operations, in one live view</span>
+    <h1>Every delivery.<br><em>Right on course.</em></h1>
+    <p class="hero-lead">RoutePilot gives dispatch teams a clean control center for shipments, drivers, vehicles, deadlines, and proof of delivery.</p>
+    <div class="hero-actions">
+      <a class="button button-lime" href="{% url 'signup' %}">Create your workspace <span>→</span></a>
+      <a class="button button-ghost" href="{% url 'login' %}">Explore the demo</a>
+    </div>
+    <div class="trust-row">
+      <span>✓ Tenant-isolated</span><span>✓ Capacity-safe</span><span>✓ Customer tracking</span>
+    </div>
+  </div>
+  <div class="hero-board" aria-label="Sample dispatch board">
+    <div class="board-top">
+      <div><small>LIVE CONTROL TOWER</small><strong>Tuesday routes</strong></div>
+      <span class="live-pill"><i></i> Live</span>
+    </div>
+    <div class="route-map">
+      <div class="map-grid"></div>
+      <div class="route-line route-one"></div>
+      <div class="route-line route-two"></div>
+      <span class="map-pin pin-a">1</span><span class="map-pin pin-b">2</span><span class="map-pin pin-c">3</span>
+      <div class="vehicle-chip"><b>RP-204</b><span>12 min ahead</span></div>
+    </div>
+    <div class="board-stats">
+      <div><strong>18</strong><span>Active stops</span></div>
+      <div><strong>96%</strong><span>On-time</span></div>
+      <div><strong>4</strong><span>Drivers live</span></div>
+    </div>
+  </div>
+</section>
+<section class="feature-strip shell">
+  <article><span class="feature-number">01</span><h2>Plan with confidence</h2><p>Match every load to an available licensed driver and a service-ready vehicle with enough capacity.</p></article>
+  <article><span class="feature-number">02</span><h2>Move with clarity</h2><p>Guide teams through guarded pickup, transit, delivery, and exception workflows with an audit trail.</p></article>
+  <article><span class="feature-number">03</span><h2>Keep customers close</h2><p>Share a privacy-aware tracking view with public updates and verifiable delivery references.</p></article>
+</section>
+<footer class="marketing-footer shell"><span>RoutePilot</span><span>Built for modern local logistics.</span></footer>
+{% endblock %}

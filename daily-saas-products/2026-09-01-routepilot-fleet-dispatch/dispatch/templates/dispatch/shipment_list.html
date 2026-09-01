@@ -1,0 +1,27 @@
+{% extends "dispatch/base.html" %}
+{% block title %}Shipments · RoutePilot{% endblock %}
+{% block content %}
+<div class="app-shell">
+  <section class="page-heading heading-row"><div><span class="eyebrow">Delivery operations</span><h1>Shipments</h1><p>Search, filter, and follow every delivery commitment.</p></div>{% if current_membership.can_manage %}<a class="button button-dark" href="{% url 'shipment_create' %}">+ New shipment</a>{% endif %}</section>
+  <form method="get" class="filter-bar">
+    <label class="search-field"><span>⌕</span><input type="search" name="q" value="{{ query }}" placeholder="Tracking code, customer, or destination"></label>
+    <select name="status"><option value="">All statuses</option>{% for value,label in status_choices %}<option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+    <select name="priority"><option value="">All priorities</option>{% for value,label in priority_choices %}<option value="{{ value }}" {% if selected_priority == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+    <button class="button button-outline" type="submit">Filter</button>
+  </form>
+  <section class="table-panel">
+    <div class="responsive-table">
+      <table><thead><tr><th>Shipment</th><th>Customer</th><th>Assignment</th><th>Deadline</th><th>Priority</th><th>Status</th><th></th></tr></thead>
+      <tbody>{% for shipment in shipments %}<tr class="{% if shipment.is_overdue %}overdue-row{% endif %}">
+        <td><strong>{{ shipment.tracking_code }}</strong><small>{{ shipment.package_description|truncatechars:28 }}</small></td>
+        <td>{{ shipment.customer.name }}<small>{{ shipment.weight_kg|floatformat:1 }} kg</small></td>
+        <td>{% if shipment.assignment %}{{ shipment.assignment.driver }}<small>{{ shipment.assignment.vehicle.registration }}</small>{% else %}<span class="muted">Unassigned</span>{% endif %}</td>
+        <td>{{ shipment.delivery_deadline|date:"M j, H:i" }}{% if shipment.is_overdue %}<small class="danger-text">Overdue</small>{% endif %}</td>
+        <td><span class="priority priority-{{ shipment.priority }}">{{ shipment.get_priority_display }}</span></td>
+        <td><span class="badge badge-{{ shipment.status }}">{{ shipment.get_status_display }}</span></td>
+        <td><a class="row-link" href="{% url 'shipment_detail' shipment.pk %}">View →</a></td>
+      </tr>{% empty %}<tr><td colspan="7"><div class="empty-state"><span>□</span><h3>No shipments found</h3><p>Try another filter or create a shipment.</p></div></td></tr>{% endfor %}</tbody></table>
+    </div>
+  </section>
+</div>
+{% endblock %}

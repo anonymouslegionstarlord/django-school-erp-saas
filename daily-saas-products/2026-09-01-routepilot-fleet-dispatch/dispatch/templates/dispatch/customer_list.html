@@ -1,0 +1,10 @@
+{% extends "dispatch/base.html" %}
+{% block title %}Customers · RoutePilot{% endblock %}
+{% block content %}
+<div class="app-shell">
+  <section class="page-heading heading-row"><div><span class="eyebrow">Relationships</span><h1>Customers</h1><p>Delivery contacts and shipment history for this workspace.</p></div>{% if current_membership.can_manage %}<a class="button button-dark" href="{% url 'customer_create' %}">+ Add customer</a>{% endif %}</section>
+  <section class="card-grid">
+    {% for customer in customers %}<article class="entity-card"><div class="entity-monogram">{{ customer.name|first }}</div><div class="entity-head"><div><h2>{{ customer.name }}</h2><p>{{ customer.contact_name }}</p></div><span class="count-chip">{{ customer.shipment_count }} shipment{{ customer.shipment_count|pluralize }}</span></div><dl class="detail-list"><div><dt>Email</dt><dd><a href="mailto:{{ customer.email }}">{{ customer.email }}</a></dd></div><div><dt>Phone</dt><dd>{{ customer.phone }}</dd></div></dl>{% if customer.notes %}<p class="entity-note">{{ customer.notes }}</p>{% endif %}</article>{% empty %}<article class="empty-state full-span"><span>◇</span><h3>No customers yet</h3><p>Add a customer before creating the first shipment.</p></article>{% endfor %}
+  </section>
+</div>
+{% endblock %}

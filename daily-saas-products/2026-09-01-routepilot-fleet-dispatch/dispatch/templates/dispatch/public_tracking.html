@@ -1,0 +1,15 @@
+{% extends "dispatch/base.html" %}
+{% block title %}Track {{ shipment.tracking_code }} · RoutePilot{% endblock %}
+{% block body_class %}tracking-page{% endblock %}
+{% block content %}
+<header class="tracking-nav shell"><a class="brand" href="{% url 'landing' %}"><span class="brand-mark">R</span><span>RoutePilot</span></a><span>Delivery by {{ organization.name }}</span></header>
+<section class="tracking-shell">
+  <div class="tracking-heading"><span class="eyebrow">Live shipment tracking</span><h1>{{ shipment.tracking_code }}</h1><p>For {{ shipment.customer.name }}</p></div>
+  <article class="tracking-status status-panel-{{ shipment.status }}"><div><span class="tracking-symbol">{% if shipment.status == 'delivered' %}✓{% elif shipment.status == 'failed' %}!{% else %}↗{% endif %}</span><div><small>Current status</small><h2>{{ shipment.get_status_display }}</h2><p>{% if shipment.status == 'delivered' %}Delivered {{ shipment.delivered_at|date:"M j, Y at H:i" }}{% else %}Expected by {{ shipment.delivery_deadline|date:"M j, Y at H:i" }}{% endif %}</p></div></div><span class="priority priority-{{ shipment.priority }}">{{ shipment.get_priority_display }}</span></article>
+  <div class="tracking-grid">
+    <article class="panel"><span class="eyebrow">Progress updates</span><h2>Journey</h2><div class="timeline customer-timeline">{% for event in events %}<div class="timeline-item"><span class="timeline-marker marker-{{ event.status }}"></span><div><div class="timeline-top"><strong>{{ event.get_status_display }}</strong><time>{{ event.created_at|date:"M j, H:i" }}</time></div><p>{{ event.message }}</p></div></div>{% empty %}<p class="muted">The dispatch team has not posted an update yet.</p>{% endfor %}</div></article>
+    <aside><article class="panel"><span class="eyebrow">Shipment</span><dl class="detail-list tracking-details"><div><dt>Description</dt><dd>{{ shipment.package_description }}</dd></div><div><dt>Weight</dt><dd>{{ shipment.weight_kg|floatformat:1 }} kg</dd></div><div><dt>Pickup window</dt><dd>{{ shipment.scheduled_pickup|date:"M j, H:i" }}</dd></div>{% if shipment.delivery_reference %}<div><dt>Delivery reference</dt><dd>{{ shipment.delivery_reference }}</dd></div>{% endif %}</dl></article><p class="privacy-note">For privacy, full addresses and driver contact details are available only to the dispatch team.</p></aside>
+  </div>
+</section>
+<footer class="tracking-footer shell"><span>Powered by RoutePilot</span><span>Secure customer tracking</span></footer>
+{% endblock %}

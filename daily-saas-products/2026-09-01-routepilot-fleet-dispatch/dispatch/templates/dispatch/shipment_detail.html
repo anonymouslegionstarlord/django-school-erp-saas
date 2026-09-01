@@ -1,0 +1,42 @@
+{% extends "dispatch/base.html" %}
+{% block title %}{{ shipment.tracking_code }} · RoutePilot{% endblock %}
+{% block content %}
+<div class="app-shell">
+  <a class="back-link" href="{% url 'shipment_list' %}">← All shipments</a>
+  <section class="detail-heading">
+    <div><span class="eyebrow">{{ shipment.customer.name }}</span><h1>{{ shipment.tracking_code }}</h1><div class="heading-meta"><span class="badge badge-{{ shipment.status }}">{{ shipment.get_status_display }}</span><span class="priority priority-{{ shipment.priority }}">{{ shipment.get_priority_display }}</span>{% if shipment.is_overdue %}<span class="overdue-flag">Deadline missed</span>{% endif %}</div></div>
+    <div class="detail-actions">{% if current_membership.can_dispatch and shipment.status != 'delivered' and shipment.status != 'cancelled' %}<a class="button button-outline" href="{% url 'shipment_assign' shipment.pk %}">{% if shipment.assignment %}Reassign{% else %}Assign route{% endif %}</a>{% endif %}</div>
+  </section>
+  <section class="detail-grid">
+    <div class="detail-main">
+      <article class="panel journey-panel">
+        <div class="panel-heading"><div><span class="eyebrow">Delivery journey</span><h2>Route details</h2></div><span class="weight-chip">{{ shipment.weight_kg|floatformat:1 }} kg</span></div>
+        <div class="journey">
+          <div class="journey-stop"><span class="stop-dot pickup-dot"></span><div><small>Pickup · {{ shipment.scheduled_pickup|date:"M j, H:i" }}</small><p>{{ shipment.pickup_address|linebreaksbr }}</p></div></div>
+          <div class="journey-line"></div>
+          <div class="journey-stop"><span class="stop-dot delivery-dot"></span><div><small>Deliver by · {{ shipment.delivery_deadline|date:"M j, H:i" }}</small><p>{{ shipment.delivery_address|linebreaksbr }}</p></div></div>
+        </div>
+        <div class="package-note"><span>Package</span><strong>{{ shipment.package_description }}</strong></div>
+      </article>
+      <article class="panel">
+        <div class="panel-heading"><div><span class="eyebrow">Audit trail</span><h2>Shipment timeline</h2></div></div>
+        <div class="timeline">
+          {% for event in events %}<div class="timeline-item"><span class="timeline-marker marker-{{ event.status }}"></span><div><div class="timeline-top"><strong>{{ event.get_status_display }}</strong><time>{{ event.created_at|date:"M j, H:i" }}</time></div><p>{{ event.message }}</p><small>{{ event.actor.get_full_name|default:event.actor.username }}{% if not event.visible_to_customer %} · Internal update{% endif %}</small></div></div>{% empty %}<div class="empty-state compact"><p>No updates have been recorded yet.</p></div>{% endfor %}
+        </div>
+      </article>
+    </div>
+    <aside class="detail-sidebar">
+      <article class="panel assignment-card">
+        <span class="eyebrow">Route assignment</span>
+        {% if shipment.assignment %}
+          <div class="avatar">{{ shipment.assignment.driver.user.first_name|first|default:"D" }}</div><h2>{{ shipment.assignment.driver }}</h2><p>{{ shipment.assignment.driver.phone }}</p>
+          <dl class="detail-list"><div><dt>Vehicle</dt><dd>{{ shipment.assignment.vehicle.registration }}</dd></div><div><dt>Type</dt><dd>{{ shipment.assignment.vehicle.get_kind_display }}</dd></div><div><dt>Capacity</dt><dd>{{ shipment.assignment.vehicle.capacity_kg|floatformat:0 }} kg</dd></div><div><dt>Assigned</dt><dd>{{ shipment.assignment.assigned_at|date:"M j, H:i" }}</dd></div></dl>
+        {% else %}<div class="empty-state compact"><span>⌁</span><h3>Route unassigned</h3><p>Choose an available driver and vehicle.</p>{% if current_membership.can_dispatch %}<a class="button button-dark button-full" href="{% url 'shipment_assign' shipment.pk %}">Assign now</a>{% endif %}</div>{% endif %}
+      </article>
+      {% if transition_form.fields.status.choices %}<article class="panel"><span class="eyebrow">Driver update</span><h2>Advance status</h2><form class="stack-form compact-form" method="post" action="{% url 'shipment_transition' shipment.pk %}">{% csrf_token %}{% if transition_form.non_field_errors %}<div class="form-alert">{{ transition_form.non_field_errors }}</div>{% endif %}{% for field in transition_form %}<label>{{ field.label }}{{ field }}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</label>{% endfor %}<button class="button button-lime button-full" type="submit">Record update →</button></form></article>{% endif %}
+      <article class="panel share-card"><span class="eyebrow">Customer visibility</span><h2>Public tracking link</h2><p>Only customer-visible events and non-sensitive shipment details appear.</p><input value="{{ public_url }}" readonly aria-label="Public tracking URL"><a class="button button-outline button-full" href="{% url 'public_tracking' current_organization.slug shipment.tracking_code %}" target="_blank" rel="noopener">Open tracking page ↗</a></article>
+      {% if shipment.status == 'delivered' %}<article class="panel proof-card"><span class="eyebrow">Proof of delivery</span><h2>{{ shipment.delivery_reference }}</h2><p>{{ shipment.proof_note }}</p><small>Completed {{ shipment.delivered_at|date:"M j, Y · H:i" }}</small></article>{% elif shipment.status == 'failed' %}<article class="panel failure-card"><span class="eyebrow">Delivery exception</span><h2>Action required</h2><p>{{ shipment.failure_reason }}</p></article>{% endif %}
+    </aside>
+  </section>
+</div>
+{% endblock %}
