@@ -1,0 +1,7 @@
+{% extends "returns/base.html" %}
+{% block title %}Team · ReturnRelay{% endblock %}
+{% block content %}
+<div class="app-shell"><section class="page-heading heading-row"><div><span class="eyebrow">Workspace access</span><h1>Returns team</h1><p>Give each teammate only the access their role needs.</p></div>{% if current_membership.can_manage %}<a class="button button-dark" href="{% url 'team_create' %}">+ Add team member</a>{% endif %}</section>
+  <section class="team-layout"><div class="people-grid">{% for membership in memberships %}<article class="person-card"><div class="avatar role-{{ membership.role }}">{{ membership.user.first_name|first|default:membership.user.username|first }}</div><div class="person-main"><h2>{{ membership.user.get_full_name|default:membership.user.username }}</h2><strong>{{ membership.title }}</strong><a href="mailto:{{ membership.user.email }}">{{ membership.user.email }}</a></div><span class="role-badge">{{ membership.get_role_display }}</span></article>{% endfor %}</div><aside class="panel role-guide"><span class="eyebrow">Access model</span><h2>Role guide</h2><dl><div><dt>Owner</dt><dd>Full operations and workspace control.</dd></div><div><dt>Claims manager</dt><dd>Manage customers, products, decisions, and resolutions.</dd></div><div><dt>Technician</dt><dd>Inspect received items and record findings.</dd></div><div><dt>Viewer</dt><dd>Read-only access to dashboards and claim history.</dd></div></dl></aside></section>
+</div>
+{% endblock %}

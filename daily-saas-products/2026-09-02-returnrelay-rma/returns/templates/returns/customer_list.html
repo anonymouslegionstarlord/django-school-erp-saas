@@ -1,0 +1,7 @@
+{% extends "returns/base.html" %}
+{% block title %}Customers · ReturnRelay{% endblock %}
+{% block content %}
+<div class="app-shell"><section class="page-heading heading-row"><div><span class="eyebrow">Customer registry</span><h1>Customers</h1><p>Keep contact and warranty ownership details tied to the right workspace.</p></div>{% if current_membership.can_manage %}<a class="button button-dark" href="{% url 'customer_create' %}">+ Add customer</a>{% endif %}</section>
+  <section class="people-grid">{% for customer in customers %}<article class="person-card"><div class="avatar">{{ customer.contact_name|first }}</div><div class="person-main"><h2>{{ customer.name }}</h2><strong>{{ customer.contact_name }}</strong><a href="mailto:{{ customer.email }}">{{ customer.email }}</a><span>{{ customer.phone }}</span></div><div class="person-stat"><strong>{{ customer.item_count }}</strong><small>registered item{{ customer.item_count|pluralize }}</small></div></article>{% empty %}<article class="empty-state panel"><span>◇</span><h3>No customers yet</h3><p>Add a customer before registering a product.</p></article>{% endfor %}</section>
+</div>
+{% endblock %}

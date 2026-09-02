@@ -1,0 +1,31 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ReturnRelay returns and warranty operations">
+  <title>{% block title %}ReturnRelay{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'returns/app.css' %}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  {% if user.is_authenticated and current_membership %}
+    <header class="app-header">
+      <a class="brand" href="{% url 'dashboard' %}" aria-label="ReturnRelay dashboard"><span class="brand-mark">↩</span><span>ReturnRelay</span></a>
+      <nav class="main-nav" aria-label="Primary navigation">
+        <a href="{% url 'dashboard' %}" {% if request.resolver_match.url_name == 'dashboard' %}class="active"{% endif %}>Overview</a>
+        <a href="{% url 'claim_list' %}" {% if 'claim' in request.resolver_match.url_name %}class="active"{% endif %}>Claims</a>
+        <a href="{% url 'catalog' %}" {% if 'catalog' in request.path %}class="active"{% endif %}>Catalog</a>
+        <a href="{% url 'customer_list' %}" {% if 'customer' in request.path %}class="active"{% endif %}>Customers</a>
+        <a href="{% url 'team_list' %}" {% if 'team' in request.path %}class="active"{% endif %}>Team</a>
+      </nav>
+      <div class="account-menu"><span class="workspace-pill"><i></i>{{ current_organization.name }}</span><span class="role-label">{{ current_membership.get_role_display }}</span><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="text-button" type="submit">Sign out</button></form></div>
+    </header>
+  {% endif %}
+  {% if messages %}<div class="toast-stack" aria-live="polite">{% for message in messages %}<div class="toast {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+  <main>{% block content %}{% endblock %}</main>
+</body>
+</html>

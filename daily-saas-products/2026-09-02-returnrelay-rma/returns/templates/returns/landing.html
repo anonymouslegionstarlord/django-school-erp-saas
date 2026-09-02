@@ -1,0 +1,15 @@
+{% extends "returns/base.html" %}
+{% block title %}ReturnRelay · Turn every return into trust{% endblock %}
+{% block body_class %}marketing-page{% endblock %}
+{% block content %}
+<header class="marketing-nav shell"><a class="brand brand-light" href="{% url 'landing' %}"><span class="brand-mark">↩</span><span>ReturnRelay</span></a><div class="marketing-actions"><a href="{% url 'login' %}">Sign in</a><a class="button button-light button-small" href="{% url 'signup' %}">Start free</a></div></header>
+<section class="hero shell">
+  <div class="hero-copy"><span class="eyebrow coral">Returns, without the runaround</span><h1>Turn every return into <em>lasting trust.</em></h1><p>One calm workspace for warranty eligibility, approvals, inspections, resolutions, and customer-visible progress.</p><div class="hero-actions"><a class="button button-coral" href="{% url 'signup' %}">Create your workspace <span>→</span></a><a class="button button-ghost" href="{% url 'login' %}">Explore the demo</a></div><div class="trust-row"><span>✓ Tenant isolated</span><span>✓ Audit ready</span><span>✓ SLA aware</span></div></div>
+  <div class="hero-visual">
+    <div class="claim-window"><div class="window-top"><span><i></i><i></i><i></i></span><small>CLAIM CONTROL CENTER</small><b>•••</b></div><div class="window-body"><div class="claim-title"><span class="product-icon">◈</span><div><small>RMA-260902-84F2A8C1</small><strong>AeroBrew Coffee Station</strong></div><span class="badge badge-inspecting">Inspecting</span></div><div class="progress-line"><i class="done"></i><i class="done"></i><i class="done"></i><i class="active"></i><i></i><i></i></div><div class="window-grid"><div class="inspection-card"><small>TECHNICIAN FINDING</small><strong>Heating element fault confirmed</strong><p>Replacement recommended under warranty.</p><span>NP</span></div><div class="metric-stack"><article><small>SLA STATUS</small><strong>6h 42m</strong><span>remaining</span></article><article><small>WARRANTY</small><strong class="good">Eligible</strong><span>until May 2027</span></article></div></div></div></div>
+    <div class="floating-chip chip-one"><span>✓</span><div><strong>Customer updated</strong><small>Just now</small></div></div><div class="floating-chip chip-two"><span>₹</span><div><strong>Refund exposure</strong><small>₹0 this claim</small></div></div>
+  </div>
+</section>
+<section class="feature-strip shell"><article><span>01</span><h2>Decide consistently</h2><p>See purchase history and exact warranty eligibility before approving the next step.</p></article><article><span>02</span><h2>Inspect with evidence</h2><p>Give technicians a focused assessment flow with findings and recommendations.</p></article><article><span>03</span><h2>Close the loop</h2><p>Record repairs, replacements, refunds, and customer-safe status updates in one timeline.</p></article></section>
+<footer class="marketing-footer shell"><span>ReturnRelay</span><span>Better operations. Better customer endings.</span></footer>
+{% endblock %}

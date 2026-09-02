@@ -1,0 +1,11 @@
+{% extends "returns/base.html" %}
+{% block title %}Track {{ claim.tracking_code }} · ReturnRelay{% endblock %}
+{% block body_class %}tracking-page{% endblock %}
+{% block content %}
+<header class="tracking-header shell"><a class="brand brand-light" href="{% url 'landing' %}"><span class="brand-mark">↩</span><span>ReturnRelay</span></a><span>Secure return tracking</span></header>
+<main class="tracking-shell"><section class="tracking-hero"><span class="eyebrow coral">{{ claim.organization.name }}</span><h1>Your return is <em>{{ claim.get_status_display|lower }}.</em></h1><p>Follow the customer-safe progress for <strong>{{ claim.item.product.name }}</strong>.</p><div class="tracking-code">{{ claim.tracking_code }}</div></section>
+  <section class="tracking-grid"><article class="tracking-card"><div class="panel-heading"><div><span class="eyebrow">Latest progress</span><h2>Status timeline</h2></div><span class="badge badge-{{ claim.status }}">{{ claim.get_status_display }}</span></div><div class="timeline public-timeline">{% for event in events %}<article><span class="timeline-dot"></span><div><div class="timeline-top"><strong>{{ event.get_status_display }}</strong><time>{{ event.created_at|date:"M j, Y · H:i" }}</time></div><p>{{ event.message }}</p></div></article>{% empty %}<p class="muted">Your claim has been received. The first update will appear here.</p>{% endfor %}</div></article>
+  <aside><article class="tracking-card"><span class="eyebrow">Claim summary</span><dl class="stacked-data"><div><dt>Product</dt><dd>{{ claim.item.product.name }}</dd></div><div><dt>Issue</dt><dd>{{ claim.get_issue_category_display }}</dd></div><div><dt>Requested remedy</dt><dd>{{ claim.get_requested_remedy_display }}</dd></div><div><dt>Submitted</dt><dd>{{ claim.created_at|date:"M j, Y" }}</dd></div></dl></article><article class="privacy-note"><span>🔒</span><div><strong>Privacy protected</strong><p>Only customer-approved updates appear here. Personal contact, serial, evidence, and internal notes stay private.</p></div></article></aside></section>
+</main>
+<footer class="tracking-footer shell"><span>Powered by ReturnRelay</span><span>Questions? Contact {{ claim.organization.name }} and quote your tracking code.</span></footer>
+{% endblock %}

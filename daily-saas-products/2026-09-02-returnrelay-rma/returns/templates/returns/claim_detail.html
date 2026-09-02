@@ -1,0 +1,68 @@
+{% extends "returns/base.html" %}
+{% block title %}{{ claim.tracking_code }} · ReturnRelay{% endblock %}
+{% block content %}
+<div class="app-shell">
+  <a class="back-link" href="{% url 'claim_list' %}">← All claims</a>
+  <section class="page-heading claim-heading">
+    <div>
+      <div class="heading-kicker"><span class="badge badge-{{ claim.status }}">{{ claim.get_status_display }}</span><span class="priority priority-{{ claim.priority }}">{{ claim.get_priority_display }}</span>{% if claim.is_overdue %}<span class="danger-flag">Response SLA overdue</span>{% endif %}</div>
+      <h1>{{ claim.tracking_code }}</h1>
+      <p>{{ claim.item.product.name }} · {{ claim.item.serial_number }}</p>
+    </div>
+    <div class="heading-actions">
+      <button class="button button-outline copy-button" type="button" data-copy="{{ public_url }}" onclick="navigator.clipboard.writeText(this.dataset.copy); this.textContent='Copied ✓'">Copy tracking link</button>
+      {% if can_inspect_now %}<a class="button button-dark" href="{% url 'claim_inspect' claim.pk %}">{% if claim.inspection %}Update inspection{% else %}Start inspection{% endif %} →</a>{% endif %}
+    </div>
+  </section>
+
+  <section class="journey" aria-label="Claim lifecycle">
+    <div class="journey-step complete"><i>1</i><span>Submitted</span></div>
+    <div class="journey-rule"></div>
+    <div class="journey-step {% if claim.status != 'submitted' %}complete{% endif %}"><i>2</i><span>Decision</span></div>
+    <div class="journey-rule"></div>
+    <div class="journey-step {% if claim.status == 'received' or claim.status == 'inspecting' or claim.status == 'resolved' or claim.status == 'closed' %}complete{% endif %}"><i>3</i><span>Received</span></div>
+    <div class="journey-rule"></div>
+    <div class="journey-step {% if claim.status == 'resolved' or claim.status == 'closed' %}complete{% endif %}"><i>4</i><span>Resolved</span></div>
+    <div class="journey-rule"></div>
+    <div class="journey-step {% if claim.status == 'closed' %}complete{% endif %}"><i>5</i><span>Closed</span></div>
+  </section>
+
+  <div class="detail-layout">
+    <div class="detail-main">
+      <section class="panel detail-panel">
+        <div class="panel-heading"><div><span class="eyebrow">Claim context</span><h2>Reported issue</h2></div><span class="warranty-pill {% if claim.item.is_in_warranty %}eligible{% else %}expired{% endif %}">{% if claim.item.is_in_warranty %}Warranty eligible{% else %}Warranty expired{% endif %}</span></div>
+        <div class="description-box"><strong>{{ claim.get_issue_category_display }}</strong><p>{{ claim.description|linebreaksbr }}</p>{% if claim.evidence_url %}<a href="{{ claim.evidence_url }}" target="_blank" rel="noopener noreferrer">Open submitted evidence ↗</a>{% endif %}</div>
+        <dl class="data-grid"><div><dt>Requested remedy</dt><dd>{{ claim.get_requested_remedy_display }}</dd></div><div><dt>Response deadline</dt><dd>{{ claim.response_due|date:"M j, Y · H:i" }}</dd></div><div><dt>Opened</dt><dd>{{ claim.created_at|date:"M j, Y · H:i" }}</dd></div><div><dt>Opened by</dt><dd>{{ claim.created_by.get_full_name|default:claim.created_by.username }}</dd></div></dl>
+      </section>
+
+      {% if claim.inspection %}
+      <section class="panel detail-panel inspection-result">
+        <div class="panel-heading"><div><span class="eyebrow">Technical assessment</span><h2>Inspection findings</h2></div><span class="fault-state {% if claim.inspection.fault_confirmed %}confirmed{% endif %}">{% if claim.inspection.fault_confirmed %}Fault confirmed{% else %}No fault confirmed{% endif %}</span></div>
+        <p class="finding-copy">{{ claim.inspection.findings|linebreaksbr }}</p>
+        <dl class="data-grid"><div><dt>Condition received</dt><dd>{{ claim.inspection.get_condition_display }}</dd></div><div><dt>Recommendation</dt><dd>{{ claim.inspection.get_recommendation_display }}</dd></div><div><dt>Technician</dt><dd>{{ claim.inspection.technician.get_full_name|default:claim.inspection.technician.username }}</dd></div><div><dt>Inspected</dt><dd>{{ claim.inspection.inspected_at|date:"M j, Y · H:i" }}</dd></div></dl>
+      </section>
+      {% endif %}
+
+      {% if claim.resolution %}
+      <section class="panel detail-panel resolution-panel">
+        <div class="resolution-icon">✓</div><div><span class="eyebrow">Final outcome</span><h2>{{ claim.get_resolution_display }}</h2><p>{{ claim.resolution_summary }}</p><div class="resolution-meta">{% if claim.resolution_amount %}<span>Value: ₹{{ claim.resolution_amount|floatformat:2 }}</span>{% endif %}{% if claim.replacement_reference %}<span>Reference: {{ claim.replacement_reference }}</span>{% endif %}</div></div>
+      </section>
+      {% endif %}
+
+      <section class="panel detail-panel">
+        <div class="panel-heading"><div><span class="eyebrow">Audit trail</span><h2>Claim timeline</h2></div></div>
+        <div class="timeline">{% for event in events %}<article><span class="timeline-dot"></span><div><div class="timeline-top"><strong>{{ event.get_status_display }}</strong><time>{{ event.created_at|date:"M j, Y · H:i" }}</time></div><p>{{ event.message }}</p><small>{{ event.actor.get_full_name|default:event.actor.username }} · {% if event.visible_to_customer %}Visible to customer{% else %}Internal update{% endif %}</small></div></article>{% empty %}<p class="muted">No status updates yet.</p>{% endfor %}</div>
+      </section>
+    </div>
+
+    <aside class="detail-aside">
+      <section class="panel aside-panel"><span class="eyebrow">Registered item</span><h2>{{ claim.item.product.name }}</h2><div class="sku-line">{{ claim.item.product.sku }} · {{ claim.item.product.get_category_display }}</div><dl class="stacked-data"><div><dt>Serial number</dt><dd>{{ claim.item.serial_number }}</dd></div><div><dt>Order reference</dt><dd>{{ claim.item.order_reference }}</dd></div><div><dt>Purchased</dt><dd>{{ claim.item.purchase_date|date:"M j, Y" }}</dd></div><div><dt>Warranty expires</dt><dd>{{ claim.item.warranty_expires|date:"M j, Y" }}</dd></div><div><dt>Retail value</dt><dd>₹{{ claim.item.product.retail_price|floatformat:2 }}</dd></div></dl></section>
+      <section class="panel aside-panel"><span class="eyebrow">Customer</span><h2>{{ claim.item.customer.name }}</h2><dl class="stacked-data"><div><dt>Contact</dt><dd>{{ claim.item.customer.contact_name }}</dd></div><div><dt>Email</dt><dd><a href="mailto:{{ claim.item.customer.email }}">{{ claim.item.customer.email }}</a></dd></div><div><dt>Phone</dt><dd>{{ claim.item.customer.phone }}</dd></div></dl></section>
+
+      {% if current_membership.can_manage and transition_form.fields.status.choices %}
+      <section class="panel aside-panel action-panel"><span class="eyebrow">Next action</span><h2>Move the claim forward</h2><form class="stack-form" method="post" action="{% url 'claim_transition' claim.pk %}">{% csrf_token %}{{ transition_form.non_field_errors }}{% for field in transition_form %}<label class="conditional-field field-{{ field.name }}">{{ field.label }}{{ field }}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</label>{% endfor %}<button class="button button-coral button-full" type="submit">Save status update →</button></form></section>
+      {% elif claim.status == 'rejected' or claim.status == 'closed' %}<section class="panel aside-panel quiet-panel"><span class="eyebrow">Workflow complete</span><h2>No further action</h2><p>This claim has reached its terminal status.</p></section>{% endif %}
+    </aside>
+  </div>
+</div>
+{% endblock %}
