@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: privacydesk
+    runtime: python
+    rootDir: daily-saas-products/2026-09-08-privacydesk-dsar
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    startCommand: gunicorn config.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase: {name: privacydesk-db, property: connectionString}
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: privacydesk.onrender.com
+databases:
+  - name: privacydesk-db
+    databaseName: privacydesk
+    user: privacydesk
